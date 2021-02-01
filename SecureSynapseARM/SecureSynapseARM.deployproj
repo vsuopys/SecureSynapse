@@ -25,6 +25,7 @@
   <ItemGroup>
     <Content Include="azuredeploy.json" />
     <Content Include="azuredeploy.parameters.json" />
+    <None Include="01-Vnet\azuredeploy.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
