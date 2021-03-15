@@ -28,7 +28,7 @@
     }
   },
   "variables": {
-    "linked-vnet-template": "./01-Vnet/azuredeploy.json"
+    "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/01-vnet/azuredeploy.json"
   },
   "resources": [
     {
