@@ -28,7 +28,7 @@
     }
   },
   "variables": {
-    "linked-vnet-template": "https://raw.githubusercontent.com/vsuopys/SecureSynapseARM/master/SecureSynapseARM/01-Vnet/azuredeploy.json"
+    "linked-vnet-template": "./01-Vnet/azuredeploy.json"
   },
   "resources": [
     {
