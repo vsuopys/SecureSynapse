@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_vnet_name": {
+            "value": "vnet-customer"
+          },
+          "virtualNetwork_address_block": {
+            "value": "172.18.0.0/16"
+          },
+          "virtualNetwork_appsubnet_address_block": {
+            "value": "172.18.3.0/24"
+          },
+          "virtualNetwork_datasubnet_address_block": {
+            "value": "172.18.2.0/24"
+          },
+          "virtualNetwork_gateway_address_block": {
+            "value": "172.18.1.0/24"
+          },
+          "virtualNetwork_default_address_block": {
+            "value": "172.18.0.0/24"
+          }
+    }
+}

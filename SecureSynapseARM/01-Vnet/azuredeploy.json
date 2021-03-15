@@ -3,27 +3,21 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualNetworks_vnet_name": {
-      "defaultValue": "vnet-customer",
       "type": "String"
     },
     "virtualNetwork_address_block": {
-      "defaultValue": "172.18.0.0/16",
       "type": "string"
     },
     "virtualNetwork_appsubnet_address_block": {
-      "defaultValue": "172.18.3.0/24",
       "type": "string"
     },
     "virtualNetwork_datasubnet_address_block": {
-      "defaultValue": "172.18.2.0/24",
       "type": "string"
     },
     "virtualNetwork_gateway_address_block": {
-      "defaultValue": "172.18.1.0/24",
       "type": "string"
     },
     "virtualNetwork_default_address_block": {
-      "defaultValue": "172.18.0.0/24",
       "type": "string"
     }
   },

@@ -27,9 +27,30 @@
       "type": "string"
     }
   },
-  "variables": {},
+  "variables": {
+    "linked-vnet-template": "https://raw.githubusercontent.com/vsuopys/SecureSynapseARM/master/SecureSynapseARM/01-Vnet/azuredeploy.json"
+  },
   "resources": [
-    
+    {
+      "name": "synapse-vnets",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('linked-vnet-template')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetworks_vnet_name": { "value": "[parameters('virtualNetworks_vnet_name')]" },
+          "virtualNetwork_address_block": { "value": "[parameters('virtualNetwork_address_block')]" },
+          "virtualNetwork_appsubnet_address_block": { "value": "[parameters('virtualNetwork_appsubnet_address_block')]" },
+          "virtualNetwork_datasubnet_address_block": { "value": "[parameters('virtualNetwork_datasubnet_address_block')]" },
+          "virtualNetwork_gateway_address_block": { "value": "[parameters('virtualNetwork_gateway_address_block')]" },
+          "virtualNetwork_default_address_block": { "value": "[parameters('virtualNetwork_default_address_block')]" }
+        }
+      }
+    }
   ],
   "outputs": {}
 }
