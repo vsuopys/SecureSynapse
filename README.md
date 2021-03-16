@@ -17,7 +17,7 @@ $mypassword = ConvertTo-SecureString "your-password" `
                 -AsPlainText `
                 -Force
 
-New-AzureRmResourceGroupDeployment
+New-AzResourceGroupDeployment
     -ResourceGroupName "your-resource-group"
     -TemplateFile azuredeploy.json
     -TemplateParameterFile azuredeploy.parameters.json
