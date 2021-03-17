@@ -4,7 +4,7 @@ This project consists of a driver ARM template that is linked to a number of sco
 
 01-vnet
 
-02-jumpbox
+02-jumpvm
 
 03-xxx
 
