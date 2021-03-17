@@ -25,18 +25,154 @@
     "virtualNetwork_default_address_block": {
       "defaultValue": "172.18.0.0/24",
       "type": "string"
+    },
+    "virtualMachineName": {
+        "type": "String",
+        "defaultValue": "jumpVM",
+        "metadata": {
+          "description": "The name of the VM"
+        }
+      },
+    "virtualMachineSize": {
+       "type": "String",
+       "defaultValue": "Standard_DS13_v2",
+       "metadata": {
+         "description": "The virtual machine size."
+       }
+     },
+    "imageOffer": {
+      "type": "String",
+      "defaultValue": "sql2019-ws2019",
+      "allowedValues": [
+        "sql2019-ws2019",
+        "sql2017-ws2019",
+        "SQL2017-WS2016",
+        "SQL2016SP1-WS2016",
+        "SQL2016SP2-WS2016",
+        "SQL2014SP3-WS2012R2",
+        "SQL2014SP2-WS2012R2"
+      ],
+      "metadata": {
+        "description": "Windows Server and SQL Offer"
+      }
+    },
+    "sqlSku": {
+      "type": "String",
+      "defaultValue": "SQLDEV",
+      "allowedValues": [
+        "Standard",
+        "Enterprise",
+        "SQLDEV",
+        "Web",
+        "Express"
+      ],
+      "metadata": {
+        "description": "SQL Server Sku"
+      }
+    },
+    "adminUsername": {
+      "type": "String",
+      "defaultValue": "cloudsa",
+      "metadata": {
+        "description": "The admin user name of the VM"
+      }
+    },
+    "adminPassword": {
+      "type": "SecureString",
+      "minLength": 12,
+      "defaultValue": "Thisisnotmypwd!",
+      "metadata": {
+        "description": "The admin password of the VM, 12 characters minimum"
+      }
+    },
+    "storageWorkloadType": {
+      "type": "String",
+      "defaultValue": "General",
+      "allowedValues": [
+        "General",
+        "OLTP",
+        "DW"
+      ],
+      "metadata": {
+        "description": "SQL Server Workload Type"
+      }
+    },
+    "sqlDataDisksCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Amount of data disks (1TB each) for SQL Data files"
+      }
+    },
+    "dataPath": {
+      "type": "String",
+      "defaultValue": "F:\\SQLData",
+      "metadata": {
+        "description": "Path for SQL Data files. Please choose drive letter from F to Z, and other drives from A to E are reserved for system"
+      }
+    },
+    "sqlLogDisksCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Amount of data disks (1TB each) for SQL Log files"
+      }
+    },
+    "logPath": {
+      "type": "String",
+      "defaultValue": "G:\\SQLLog",
+      "metadata": {
+        "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
+      }
     }
   },
   "variables": {
-    "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/01-vnet/azuredeploy.json"
+    "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/01-vnet/azuredeploy.json",
+    "linked-jumpvm-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/02-jumpvm/azuredeploy.json"
   },
   "resources": [
     {
-      "name": "synapse-vnets",
+      "name": "synapseJumpVm",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
+      "apiVersion": "2019-05-01",
+      "dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'synapseVnets')]"],
       "properties": {
         "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('linked-jumpvm-template')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "VirtualMachineName": { "value": "[parameters('VirtualMachineName')]" },
+          "VirtualMachineSize": { "value": "[parameters('VirtualMachineSize')]" },
+          "existingVirtualNetworkName": { "value": "[reference('synapseVnets').outputs.virtualNetworkName.value]"},
+          "existingVnetResourceGroup": { "value": "[reference('synapseVnets').outputs.resourceGroupName.value]"},
+          "existingSubnetName": { "value": "[reference('synapseVnets').outputs.appSubnetName.value]"},
+          "imageOffer": { "value": "[parameters('imageOffer')]" },
+          "sqlSKU": { "value": "[parameters('sqlSKU')]" },
+          "adminUsername": { "value": "[parameters('adminUsername')]" },
+          "adminPassword": { "value": "[parameters('adminPassword')]" },
+          "storageWorkloadType": { "value": "[parameters('storageWorkloadType')]" },
+          "sqlDataDisksCount": { "value": "[parameters('sqlDataDisksCount')]" },
+          "dataPath": { "value": "[parameters('dataPath')]" },
+          "sqlLogDisksCount": { "value": "[parameters('sqlLogDisksCount')]" },
+          "logPath": { "value": "[parameters('logPath')]" },
+          "location": { "value": "[reference('synapseVnets').outputs.resourceGroupLocation.value]" }
+//          [reference('synapseVnets').outputs.childVnet.value]
+        }
+      }
+    },
+    {
+      "name": "synapseVnets",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-05-01",
+      "properties": {
+        "mode": "Incremental",
+        
         "templateLink": {
           "uri": "[variables('linked-vnet-template')]",
           "contentVersion": "1.0.0.0"
@@ -52,5 +188,26 @@
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "vmName": {
+      "type": "string",
+      "value": "[parameters('VirtualMachineName')]"
+    },
+    "vmIP": {
+      "type": "string",
+      "value": "[reference('synapseJumpVm').outputs.vmIP.value]"
+    },
+    "vmResourceId": {
+      "type": "string",
+      "value": "[reference('synapseJumpVm').outputs.vmResourceId.value]"
+    },
+    "adminUsername": {
+      "type": "String",
+      "value": "[reference('synapseJumpVm').outputs.adminUsername.value]"
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "value": "[parameters('adminPassword')]"
+    }
+  }
 }

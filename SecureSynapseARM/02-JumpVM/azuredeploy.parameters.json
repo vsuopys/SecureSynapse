@@ -1,30 +1,21 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-05-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworks_vnet_name": {
-            "value": "vnet-customer"
-        },
-        "virtualNetwork_address_block": {
-            "value": "172.18.0.0/16"
-        },
-        "virtualNetwork_appsubnet_address_block": {
-            "value": "172.18.3.0/24"
-        },
-        "virtualNetwork_datasubnet_address_block": {
-            "value": "172.18.2.0/24"
-        },
-        "virtualNetwork_gateway_address_block": {
-            "value": "172.18.1.0/24"
-        },
-        "virtualNetwork_default_address_block": {
-            "value": "172.18.0.0/24"
-        },
         "virtualMachineName": {
             "value": "jumpVM"
         },
         "virtualMachineSize": {
             "value": "Standard_DS13_v2"
+        },
+        "existingVirtualNetworkName": {
+            "value": "vnet-customer"
+        },
+        "existingVnetResourceGroup": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "existingSubnetName": {
+            "value": "appvm-sub"
         },
         "imageOffer": {
             "value": "sql2019-ws2019"
@@ -36,7 +27,7 @@
             "value": "cloudsa"
         },
         "adminPassword": {
-            "value": "ChangeThisPwd!" 
+            "value": "" // TODO: Fill in parameter value
         },
         "storageWorkloadType": {
             "value": "General"
@@ -52,6 +43,9 @@
         },
         "logPath": {
             "value": "G:\\SQLLog"
+        },
+        "location": {
+            "value": "" // TODO: Fill in parameter value
         }
     }
 }

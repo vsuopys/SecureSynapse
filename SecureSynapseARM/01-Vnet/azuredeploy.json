@@ -361,5 +361,31 @@
         "privateLinkServiceNetworkPolicies": "Enabled"
       }
     }
-  ]
+  ],
+  "outputs": {
+    "resourceGroupName": {
+      "type": "string",
+      "value": "[resourceGroup().name]"
+    },
+    "resourceGroupID": {
+      "type": "string",
+      "value": "[resourceGroup().id]"
+    },
+    "resourceGroupLocation": {
+      "type": "string",
+      "value": "[resourceGroup().location]"
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "value": "[parameters('virtualNetworks_vnet_name')]"
+    },
+    "appSubnetName": {
+      "type": "string",
+      "value": "[variables('subnet_appsubnet_name')]"
+    },
+    "dataSubnetName": {
+      "type": "string",
+      "value": "[variables('subnet_datasubnet_name')]"
+    }
+  }
 }
