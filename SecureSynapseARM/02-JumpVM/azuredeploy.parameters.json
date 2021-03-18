@@ -12,7 +12,7 @@
             "value": "vnet-customer"
         },
         "existingVnetResourceGroup": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "existingSubnetName": {
             "value": "appvm-sub"
@@ -27,7 +27,7 @@
             "value": "cloudsa"
         },
         "adminPassword": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "storageWorkloadType": {
             "value": "General"
@@ -45,7 +45,7 @@
             "value": "G:\\SQLLog"
         },
         "location": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         }
     }
 }
