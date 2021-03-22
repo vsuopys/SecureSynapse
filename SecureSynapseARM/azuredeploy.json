@@ -203,13 +203,13 @@
       "type": "string",
       "value": "[parameters('VirtualMachineName')]"
     },
+    "vmSize": {
+      "type": "string",
+      "value": "[reference('synapseJumpVm').outputs.vmSize.value]"
+    },
     "vmIPAddress": {
       "type": "string",
       "value": "[reference('synapseJumpVm').outputs.vmIPAddress.value]"
-    },
-    "vmResourceId": {
-      "type": "string",
-      "value": "[reference('synapseJumpVm').outputs.vmResourceId.value]"
     },
     "adminUsername": {
       "type": "String",
