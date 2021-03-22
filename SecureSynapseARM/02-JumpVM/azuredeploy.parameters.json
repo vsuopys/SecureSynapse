@@ -2,11 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "createJumpVM": {
+            "value": true
+        },
         "virtualMachineName": {
             "value": "jumpVM"
         },
         "virtualMachineSize": {
-            "value": "Standard_DS13_v2"
+            "value": "Standard_D2ds_v4"
         },
         "existingVirtualNetworkName": {
             "value": "vnet-customer"
@@ -45,6 +48,7 @@
             "value": "G:\\SQLLog"
         },
         "location": {
+
             "value": ""
         }
     }

@@ -5,7 +5,7 @@
         "dataLakeAccount": {
             "value": "securesynapseadls"
         },
-        "dataLakeAccountType": {
+        "dataLakeAccountContainer": {
             "value": "filestore"
         },
         "sqlAdminLogin": {
@@ -16,6 +16,12 @@
         },
         "synapseWSName": {
             "value": "securedsynapsews"
+        },
+        "allowAllConnections": {
+            "value": "true"
+        },
+        "createNewStorageAccount": {
+            "value": true
         }
     }
 }

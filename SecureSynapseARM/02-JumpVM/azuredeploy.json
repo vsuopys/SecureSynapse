@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "createJumpVM": {
+        "type": "bool",
+        "defaultValue": "[bool('false')]",
+        "metadata": {
+          "description": "Do you want to create a VM with SSMS and the ability to securely access Synapse Studio?"
+        }
+      },
       "virtualMachineName": {
         "type": "String",
         "defaultValue": "jumpVM",
@@ -11,7 +18,7 @@
       },
       "virtualMachineSize": {
         "type": "String",
-        "defaultValue": "Standard_DS13_v2",
+        "defaultValue": "Standard_D2ds_v4",
         "metadata": {
           "description": "The virtual machine size."
         }
@@ -78,7 +85,7 @@
         "type": "SecureString",
         "minLength": 12,
         "metadata": {
-          "description": "The admin password of the VM, 12 characters minimum"
+          "description": "The admin password of the VM. 12 characters minimum"
         }
       },
       "storageWorkloadType": {
@@ -99,7 +106,7 @@
         "minValue": 1,
         "maxValue": 8,
         "metadata": {
-          "description": "Amount of data disks (1TB each) for SQL Data files"
+          "description": "Amount of data disks (128GB each) for SQL Data files"
         }
       },
       "dataPath": {
@@ -115,7 +122,7 @@
         "minValue": 1,
         "maxValue": 8,
         "metadata": {
-          "description": "Amount of data disks (1TB each) for SQL Log files"
+          "description": "Amount of data disks (128GB each) for SQL Log files"
         }
       },
       "logPath": {
@@ -152,7 +159,7 @@
         }
       ],
       "publicIpAddressName": "[concat(parameters('virtualMachineName'), uniqueString(resourceGroup().id), '-publicip')]",
-      "publicIpAddressType": "Dynamic",
+      "publicIpAddressType": "Static",
       "publicIpAddressSku": "Basic",
       "diskConfigurationType": "NEW",
       "nsgId": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
@@ -163,13 +170,14 @@
         "createOption": "empty",
         "caching": "ReadOnly",
         "writeAcceleratorEnabled": false,
-        "storageAccountType": "Premium_LRS",
-        "diskSizeGB": 1023
+        "storageAccountType": "Standard_LRS",
+        "diskSizeGB": 127
       },
       "tempDbPath": "D:\\SQLTemp"
     },
     "resources": [
       {
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/publicIpAddresses",
         "apiVersion": "2020-06-01",
         "name": "[variables('publicIpAddressName')]",
@@ -182,6 +190,7 @@
         }
       },
       {
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkSecurityGroupName')]",
@@ -191,6 +200,7 @@
         }
       },
       {
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkInterfaceName')]",
@@ -221,6 +231,7 @@
         }
       },
       {
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2020-06-01",
         "name": "[parameters('virtualMachineName')]",
@@ -236,7 +247,7 @@
             "osDisk": {
               "createOption": "fromImage",
               "managedDisk": {
-                "storageAccountType": "Premium_LRS"
+                "storageAccountType": "Standard_LRS"
               }
             },
             "imageReference": {
@@ -281,6 +292,7 @@
         }
       },
       {
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
         "apiVersion": "2017-03-01-preview",
         "name": "[parameters('virtualMachineName')]",
@@ -311,17 +323,25 @@
       }
     ],
     "outputs": {
+      "CreateJumpVM": {
+        "type": "bool",
+        "value": "[parameters('createJumpVM')]"
+      },
       "vmName": {
         "type": "string",
         "value": "[parameters('virtualMachineName')]"
+      },
+      "vmSize": {
+        "type": "string",
+        "value": "[parameters('virtualMachineSize')]"
       },
       "adminUsername": {
         "type": "String",
         "value": "[parameters('adminUsername')]"
       },
-      "vmIP": {
+      "vmIPAddress": {
         "type": "string",
-        "value": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+        "value": "[reference(variables('publicIpAddressName'), '2020-05-01').IpAddress]"
       }
     }
   }

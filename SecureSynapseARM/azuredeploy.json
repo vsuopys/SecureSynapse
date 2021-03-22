@@ -26,6 +26,13 @@
       "defaultValue": "172.18.0.0/24",
       "type": "string"
     },
+    "createJumpVM": {
+      "type": "bool",
+      "defaultValue": "[bool('false')]",
+      "metadata": {
+        "description": "Should we create a jumpbox VM with SSMS?"
+      }
+    },
     "virtualMachineName": {
         "type": "String",
         "defaultValue": "jumpVM",
@@ -35,7 +42,7 @@
       },
     "virtualMachineSize": {
        "type": "String",
-       "defaultValue": "Standard_DS13_v2",
+       "defaultValue": "Standard_D2ds_v4",
        "metadata": {
          "description": "The virtual machine size."
        }
@@ -139,6 +146,7 @@
       "name": "synapseJumpVm",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
+//      "condition": "[parameters('createJumpVM')]",
       "dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'synapseVnets')]"],
       "properties": {
         "mode": "Incremental",
@@ -147,6 +155,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "createJumpVM": { "value": "[parameters('createJumpVM')]" },
           "VirtualMachineName": { "value": "[parameters('VirtualMachineName')]" },
           "VirtualMachineSize": { "value": "[parameters('VirtualMachineSize')]" },
           "existingVirtualNetworkName": { "value": "[reference('synapseVnets').outputs.virtualNetworkName.value]"},
@@ -193,9 +202,9 @@
       "type": "string",
       "value": "[parameters('VirtualMachineName')]"
     },
-    "vmIP": {
+    "vmIPAddress": {
       "type": "string",
-      "value": "[reference('synapseJumpVm').outputs.vmIP.value]"
+      "value": "[reference('synapseJumpVm').outputs.vmIPAddress.value]"
     },
     "vmResourceId": {
       "type": "string",
