@@ -138,8 +138,8 @@
     }
   },
   "variables": {
-    "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/01-vnet/azuredeploy.json",
-    "linked-jumpvm-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/02-jumpvm/azuredeploy.json",
+    "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/01-Vnet/azuredeploy.json",
+    "linked-jumpvm-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/02-JumpVM/azuredeploy.json",
     "linked-synapsews-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/03-SynapseWS/azuredeploy.json"
   },
   "resources": [
