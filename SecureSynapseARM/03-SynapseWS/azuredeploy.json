@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "createSynapseWS": {
+            "type": "string",
+            "defaultValue": "true",
+            "metadata": {
+                "description": "Create a new Synapse workspace?"
+            }
+        },
         "dataLakeAccount": {
             "type": "string",
             "defaultValue": "securesynapseadls",
@@ -44,7 +51,7 @@
             }
         },
         "createNewStorageAccount": {
-            "type": "bool",
+            "type": "string",
             "defaultValue": "true",
             "metadata": {
                 "description": "Should a new storage account be created?"
@@ -54,14 +61,16 @@
     "functions": [],
     "variables": {
         "location": "[resourceGroup().location]",
+        "subscriptionId": "[subscription().subscriptionId]",
         "defaultStorageAccountURL": "[concat('https://',parameters('dataLakeAccount'), '.dfs.core.windows.net')]",
+        "webEndpoint": "[concat('https://web.azuresynapse.net?workspace=%2fsubscriptions%2f', variables('subscriptionId'),'%2fresourceGroups%2f', variables('location'),'%2fproviders%2fMicrosoft.Synapse%2fworkspaces%2f', parameters('synapseWSName'))]",
         "devEndpoint": "[concat('https://', parameters('synapseWSName'), '.dev.azuresynapse.net')]",
         "onDemandEndpoint": "[concat(parameters('synapseWSName'), '-ondemand.sql.azuresynapse.net')]",
         "sqlEndpoint": "[concat(parameters('synapseWSName'), '.sql.azuresynapse.net')]"
-
     },
     "resources": [
         {
+            "condition": "[parameters('createSynapseWS')]",
             "name": "[parameters('synapseWSName')]",
             "type": "Microsoft.Synapse/workspaces",
             "apiVersion": "2020-12-01",
@@ -82,7 +91,7 @@
                 // "computeSubnetId": "string"     //subnet used for compute in workspace
                 // },
                 "connectivityEndpoints": {
-    //                "web": "[concat('https://web.azuresynapse.net?workspace=%2fsubscriptions%2f2ba972e5-d964-4ff6-9b9b-bf89377f4391%2fresourceGroups%2f', parameters('location'),'%2fproviders%2fMicrosoft.Synapse%2fworkspaces%2f', parameters('synapseWSName'))]",
+                    "web": "[variables('webEndpoint')]",
                     "dev": "[variables('devEndpoint')]",
                     "sqlOnDemand": "[variables('onDemandEndpoint')]",
                     "sql": "[variables('sqlEndpoint')]"
@@ -161,6 +170,10 @@
         }
     ],
     "outputs": {
+        "subscriptionId": {
+            "type": "string",
+            "value": "[variables('subscriptionId')]"
+        },
         "resourceGroupName": {
             "type": "string",
             "value": "[resourceGroup().name]"
@@ -172,6 +185,10 @@
         "synapseWorkspaceName": {
             "type": "string",
             "value": "[parameters('synapseWSName')]"
+        },
+        "webEndpoint": {
+            "type": "string",
+            "value": "[variables('webEndpoint')]"
         },
         "devEndpoint": {
             "type": "string",

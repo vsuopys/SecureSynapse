@@ -13,9 +13,9 @@ This project consists of a driver ARM template that is linked to a number of sco
 # Secure Credentials
 In order to avoid storing passwords in the templates, you must pass a password secure string as a Powershell cmdlet parameter as shown below:
 
-$mypassword = ConvertTo-SecureString "your-password" `
-                -AsPlainText `
-                -Force
+$mypassword = ConvertTo-SecureString "your-password" -AsPlainText -Force
+
+$sqlpassword = ConvertTo-SecureString "your-Synapse-password" -AsPlainText -Force
 
 New-AzResourceGroupDeployment
     -ResourceGroupName "your-resource-group"
@@ -23,3 +23,6 @@ New-AzResourceGroupDeployment
     -TemplateParameterFile azuredeploy.parameters.json
     -adminUsername "your-admin-user"
     -adminPassword $mypassword
+    -sqlAdminLogin "your-Synapse-admin-user"
+    -sqlAdminPassword $sqlpassword
+
