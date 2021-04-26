@@ -135,6 +135,70 @@
       "metadata": {
         "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
       }
+    },
+    "createSynapseWS": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Create new Synapse workspace."
+      }
+    },
+    "createNewStorageAccount": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Create new data lake storage account for Synapse metadata."
+      }
+    },
+    "dataLakeAccount": {
+      "type": "string",
+      "defaultValue": "secsynapsedlacct",
+      "metadata": {
+        "description": "Name of the data lake storage account for Synapse metadata."
+      }
+    },
+    "dataLakeAccountContainer": {
+      "type": "string",
+      "defaultValue": "secsynapsemeta",
+      "metadata": {
+        "description": "Name of the data lake storage account for Synapse metadata."
+      }
+    },
+    /*
+    "storageAccount": {
+      "type": "string",
+      "defaultValue": "secsynapsestorage",
+      "metadata": {
+        "description": "Name of the storage account for Synapse audits and logs."
+      }
+    },
+    */
+    "synapseWSName": {
+      "type": "string",
+      "defaultValue": "secsynapse-ws",
+      "metadata": {
+        "description": "Name of the Synapse workspace."
+      }
+    },
+    "allowAllConnections": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Name of the data lake storage account for Synapse metadata."
+      }
+    },
+    "sqlAdminLogin": {
+      "type": "string",
+      "defaultValue": "sqladminuser",
+      "metadata": {
+          "description": "Synapse SQL administrator account name"
+      }
+    },
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+          "description": "description"
+      }
     }
   },
   "variables": {
@@ -147,7 +211,7 @@
       "name": "synapseJumpVm",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
-//      "condition": "[parameters('createJumpVM')]",
+      "condition": "[parameters('createJumpVM')]",
       "dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'synapseVnets')]"],
       "properties": {
         "mode": "Incremental",
@@ -194,6 +258,29 @@
           "virtualNetwork_datasubnet_address_block": { "value": "[parameters('virtualNetwork_datasubnet_address_block')]" },
           "virtualNetwork_gateway_address_block": { "value": "[parameters('virtualNetwork_gateway_address_block')]" },
           "virtualNetwork_default_address_block": { "value": "[parameters('virtualNetwork_default_address_block')]" }
+        }
+      }
+    },
+    {
+      "name": "synapseWorkspace",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "properties": {
+        "mode": "Incremental",
+        
+        "templateLink": {
+          "uri": "[variables('linked-synapsews-template')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "createSynapseWS": { "value": "[parameters('createSynapseWS')]" },
+          "dataLakeAccount": { "value": "[parameters('dataLakeAccount')]" },
+          "dataLakeAccountContainer": { "value": "[parameters('dataLakeAccountContainer')]" },
+          "synapseWSName": { "value": "[parameters('synapseWSName')]" },
+          "allowAllConnections": { "value": "[parameters('allowAllConnections')]" },
+          "createNewStorageACcount": { "value": "[parameters('createNewStorageAccount')]" },
+          "sqlAdminLogin": { "value": "[parameters('sqlAdminLogin')]" },
+          "sqlAdminPassword": { "value": "[parameters('sqlAdminPassword')]" }
         }
       }
     }

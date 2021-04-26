@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "createJumpVM": {
-            "value": true 
+            "value": false 
         },
         "virtualNetworks_vnet_name": {
             "value": "vnet-customer"
@@ -55,6 +55,12 @@
         },
         "logPath": {
             "value": "G:\\SQLLog"
+        },
+        "sqlAdminLogin": {
+            "value": "sqladminuser"
+        },
+        "sqlAdminPassword": {
+            "value": "" 
         }
     }
 }

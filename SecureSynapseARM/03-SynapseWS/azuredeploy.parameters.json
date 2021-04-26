@@ -9,7 +9,7 @@
             "value": "securesynapseadls"
         },
         "dataLakeAccountContainer": {
-            "value": "filestore"
+            "value": "synapsefiles"
         },
         "sqlAdminLogin": {
             "value": "sqladminuser"
@@ -18,7 +18,7 @@
             "value": "" 
         },
         "synapseWSName": {
-            "value": "securedsynapsews"
+            "value": "securedsynapse-ws"
         },
         "allowAllConnections": {
             "value": "true"
