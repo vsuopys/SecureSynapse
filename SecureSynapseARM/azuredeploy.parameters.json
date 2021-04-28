@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "createJumpVM": {
-            "value": false 
+            "value": "false" 
         },
         "virtualNetworks_vnet_name": {
             "value": "vnet-customer"
@@ -24,7 +24,7 @@
             "value": "172.18.0.0/24"
         },
         "virtualMachineName": {
-            "value": "jumpVM"
+            "value": "jumpVM2"
         },
         "virtualMachineSize": {
             "value": "Standard_D2ds_v4"

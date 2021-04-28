@@ -27,8 +27,8 @@
       "type": "string"
     },
     "createJumpVM": {
-      "type": "bool",
-      "defaultValue": "[bool('false')]",
+      "type": "string",
+      "defaultValue": "false",
       "metadata": {
         "description": "Should we create a jumpbox VM with SSMS?"
       }
@@ -208,10 +208,10 @@
   },
   "resources": [
     {
-      "name": "synapseJumpVm",
+      "name": "synapseJumpVM",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
-      "condition": "[parameters('createJumpVM')]",
+      "condition": "[bool(parameters('createJumpVM'))]",
       "dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'synapseVnets')]"],
       "properties": {
         "mode": "Incremental",
@@ -292,15 +292,15 @@
     },
     "vmSize": {
       "type": "string",
-      "value": "[reference('synapseJumpVm').outputs.vmSize.value]"
+      "value": "[reference('synapseJumpVM').outputs.vmSize.value]"
     },
     "vmIPAddress": {
       "type": "string",
-      "value": "[reference('synapseJumpVm').outputs.vmIPAddress.value]"
+      "value": "[reference('synapseJumpVM').outputs.vmIPAddress.value]"
     },
     "adminUsername": {
       "type": "String",
-      "value": "[reference('synapseJumpVm').outputs.adminUsername.value]"
+      "value": "[reference('synapseJumpVM').outputs.adminUsername.value]"
     },
     "adminPassword": {
       "type": "securestring",

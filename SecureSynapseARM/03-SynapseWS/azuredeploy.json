@@ -70,7 +70,7 @@
     },
     "resources": [
         {
-            "condition": "[parameters('createSynapseWS')]",
+            "condition": "[bool(parameters('createSynapseWS'))]",
             "name": "[parameters('synapseWSName')]",
             "type": "Microsoft.Synapse/workspaces",
             "apiVersion": "2020-12-01",
@@ -137,7 +137,7 @@
             }
         }, 
         {
-            "condition": "[parameters('createNewStorageAccount')]",
+            "condition": "[bool(parameters('createNewStorageAccount'))]",
             "name": "[parameters('dataLakeAccount')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
@@ -155,7 +155,7 @@
             },
             "resources": [
                 {
-                    "condition": "[parameters('createNewStorageAccount')]",
+                    "condition": "[bool(parameters('createNewStorageAccount'))]",
                     "name": "[concat('default/', parameters('dataLakeAccountContainer'))]",
                     "type": "containers",
                     "apiVersion": "2018-02-01",

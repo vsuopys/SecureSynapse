@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "createJumpVM": {
-            "value": true
+            "value": "false"
         },
         "virtualMachineName": {
             "value": "jumpVM"
@@ -30,7 +30,7 @@
             "value": "cloudsa"
         },
         "adminPassword": {
-            "value": ""
+            "value": "ChangeThisPWD!"
         },
         "storageWorkloadType": {
             "value": "General"

@@ -3,8 +3,8 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "createJumpVM": {
-        "type": "bool",
-        "defaultValue": "[bool('false')]",
+        "type": "String",
+        "defaultValue": "false",
         "metadata": {
           "description": "Do you want to create a VM with SSMS and the ability to securely access Synapse Studio?"
         }
@@ -133,7 +133,7 @@
         }
       },
       "location": {
-        "type": "string",
+        "type": "String",
         "defaultValue": "[resourceGroup().location]",
         "metadata": {
           "description": "Location for all resources."
@@ -177,7 +177,7 @@
     },
     "resources": [
       {
-        "condition": "[parameters('createJumpVM')]",
+        "condition": "[bool(parameters('createJumpVM'))]",
         "type": "Microsoft.Network/publicIpAddresses",
         "apiVersion": "2020-06-01",
         "name": "[variables('publicIpAddressName')]",
@@ -190,7 +190,7 @@
         }
       },
       {
-        "condition": "[parameters('createJumpVM')]",
+        "condition": "[bool(parameters('createJumpVM'))]",
         "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkSecurityGroupName')]",
@@ -200,7 +200,7 @@
         }
       },
       {
-        "condition": "[parameters('createJumpVM')]",
+        "condition": "[bool(parameters('createJumpVM'))]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkInterfaceName')]",
@@ -231,7 +231,7 @@
         }
       },
       {
-        "condition": "[parameters('createJumpVM')]",
+        "condition": "[bool(parameters('createJumpVM'))]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2020-06-01",
         "name": "[parameters('virtualMachineName')]",
@@ -292,7 +292,7 @@
         }
       },
       {
-        "condition": "[parameters('createJumpVM')]",
+        "condition": "[bool(parameters('createJumpVM'))]",
         "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
         "apiVersion": "2017-03-01-preview",
         "name": "[parameters('virtualMachineName')]",
@@ -323,10 +323,10 @@
       }
     ],
     "outputs": {
-      "CreateJumpVM": {
-        "type": "bool",
-        "value": "[parameters('createJumpVM')]"
-      },
+      // "CreateJumpVM": {
+      //   "type": "string",
+      //   "value": "[parameters('createJumpVM')]"
+      // },
       "vmName": {
         "type": "string",
         "value": "[parameters('virtualMachineName')]"
