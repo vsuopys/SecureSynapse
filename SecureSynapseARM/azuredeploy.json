@@ -159,9 +159,9 @@
     },
     "dataLakeAccountContainer": {
       "type": "string",
-      "defaultValue": "secsynapsemeta",
+      "defaultValue": "synapsefilesystem",
       "metadata": {
-        "description": "Name of the data lake storage account for Synapse metadata."
+        "description": "Name of the data lake filesystem for Synapse metadata."
       }
     },
     /*
@@ -204,7 +204,8 @@
   "variables": {
     "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/01-Vnet/azuredeploy.json",
     "linked-jumpvm-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/02-JumpVM/azuredeploy.json",
-    "linked-synapsews-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/03-SynapseWS/azuredeploy.json"
+    //"linked-synapsews-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/03-SynapseWS/azuredeploy.json",
+    "linked-synapsews-template2": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/03-SynapseWS/azdeploysynapse.json"
   },
   "resources": [
     {
@@ -261,6 +262,7 @@
         }
       }
     },
+    /*
     {
       "name": "synapseWorkspace",
       "type": "Microsoft.Resources/deployments",
@@ -284,6 +286,36 @@
         }
       }
     }
+    */
+    {
+      "name": "synapseWorkspace",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "condition": "[bool(parameters('createSynapseWS'))]",
+      "properties": {
+        "mode": "Incremental",
+        
+        "templateLink": {
+          "uri": "[variables('linked-synapsews-template2')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "name": { "value": "[parameters('synapseWSName')]" },
+          "defaultDataLakeStorageAccountName": { "value": "[parameters('dataLakeAccount')]" },
+          "defaultDataLakeStorageFilesystemName": { "value": "[parameters('dataLakeAccountContainer')]" },
+          "sqlAdministratorLogin": { "value": "[parameters('sqlAdminLogin')]" },
+          "sqlAdministratorLoginPassword": { "value": "[parameters('sqlAdminPassword')]" },
+          "allowAllConnections": { "value": "[bool(parameters('allowAllConnections'))]" },
+          "isNewStorageAccount": { "value": "[parameters('createNewStorageAccount')]" },
+          "managedVirtualNetworkSettings": {
+            "value": {
+                "allowedAadTenantIdsForLinking": [],
+                "preventDataExfiltration": true
+            }
+          }
+        }
+      }
+    }
   ],
   "outputs": {
     "vmName": {
@@ -292,15 +324,15 @@
     },
     "vmSize": {
       "type": "string",
-      "value": "[reference('synapseJumpVM').outputs.vmSize.value]"
+      "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmSize.value]"
     },
     "vmIPAddress": {
       "type": "string",
-      "value": "[reference('synapseJumpVM').outputs.vmIPAddress.value]"
+      "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmIPAddress.value]"
     },
     "adminUsername": {
       "type": "String",
-      "value": "[reference('synapseJumpVM').outputs.adminUsername.value]"
+      "value": "[reference('synapseJumpVM', '2019-05-01').outputs.adminUsername.value]"
     },
     "adminPassword": {
       "type": "securestring",

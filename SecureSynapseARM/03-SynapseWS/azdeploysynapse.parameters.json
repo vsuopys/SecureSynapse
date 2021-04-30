@@ -1,0 +1,100 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "securedsynapse-ws"
+        },
+        /*
+        "location": {
+            "value": "" // Pass in from master template
+        },
+        */
+        "defaultDataLakeStorageAccountName": {
+            "value": "securesynapseadls"
+        },
+        "defaultDataLakeStorageFilesystemName": {
+            "value": "synapsefiles"
+        },
+        "sqlAdministratorLogin": {
+            "value": "sqladminuser"
+        },
+        "sqlAdministratorLoginPassword": {
+            "value": ""
+        },
+        "setWorkspaceIdentityRbacOnStorageAccount": {
+            "value": true
+        },
+        "allowAllConnections": {
+            "value": true
+        },
+        "grantWorkspaceIdentityControlForSql": {
+            "value": "Enabled"
+        },
+        "managedVirtualNetwork": {
+            "value": "default"
+        },
+        "tagValues": {
+            "value": {}
+        },
+        /*
+        "storageSubscriptionID": {
+            "value": "" // TODO: Get the subscription ID from master template
+        },
+        "storageResourceGroupName": {
+            "value": "" // TODO: Get the resource group name from master template
+        },
+        "storageLocation": {
+            "value": "" // TODO: Get location from resource group
+        },
+        */
+        "storageRoleUniqueId": {
+            "value": "" 
+        },
+        "isNewStorageAccount": {
+            "value": true
+        },
+        "isNewFileSystemOnly": {
+            "value": false 
+        },
+        "adlaResourceId": {
+            "value": ""
+        },
+        "managedResourceGroupName": {
+            "value": ""
+        },
+        "storageAccessTier": {
+            "value": "Hot"
+        },
+        "storageAccountType": {
+            "value": "Standard_RAGRS"
+        },
+        "storageSupportsHttpsTrafficOnly": {
+            "value": true
+        },
+        "storageKind": {
+            "value": "StorageV2"
+        },
+        "storageIsHnsEnabled": {
+            "value": true 
+        },
+        "userObjectId": {
+            "value": "" // TODO: Need to pass user object ID in as param from master template ie 3612a7c9-a01b-45d7-b023-e8a03915960b
+        },
+        "setSbdcRbacOnStorageAccount": {
+            "value": true
+        },
+        "setWorkspaceMsiByPassOnStorageAccount": {
+            "value": false
+        },
+        "workspaceStorageAccountProperties": {
+            "value": {}
+        },
+        "managedVirtualNetworkSettings": {
+            "value": {
+                "allowedAadTenantIdsForLinking": [],
+                "preventDataExfiltration": true
+            }
+        }
+    }
+}

@@ -6,22 +6,22 @@
             "value": "false" 
         },
         "virtualNetworks_vnet_name": {
-            "value": "vnet-customer"
+            "value": "vnet-customer2"
         },
         "virtualNetwork_address_block": {
-            "value": "172.18.0.0/16"
+            "value": "172.17.0.0/16"
         },
         "virtualNetwork_appsubnet_address_block": {
-            "value": "172.18.3.0/24"
+            "value": "172.17.3.0/24"
         },
         "virtualNetwork_datasubnet_address_block": {
-            "value": "172.18.2.0/24"
+            "value": "172.17.2.0/24"
         },
         "virtualNetwork_gateway_address_block": {
-            "value": "172.18.1.0/24"
+            "value": "172.17.1.0/24"
         },
         "virtualNetwork_default_address_block": {
-            "value": "172.18.0.0/24"
+            "value": "172.17.0.0/24"
         },
         "virtualMachineName": {
             "value": "jumpVM2"

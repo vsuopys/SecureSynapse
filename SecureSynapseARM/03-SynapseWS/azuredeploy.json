@@ -140,7 +140,7 @@
             "condition": "[bool(parameters('createNewStorageAccount'))]",
             "name": "[parameters('dataLakeAccount')]",
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2018-02-01",
             "tags": {},
             "location": "[variables('location')]",
             "kind": "StorageV2",
@@ -157,7 +157,7 @@
                 {
                     "condition": "[bool(parameters('createNewStorageAccount'))]",
                     "name": "[concat('default/', parameters('dataLakeAccountContainer'))]",
-                    "type": "containers",
+                    "type": "blobServices/containers",
                     "apiVersion": "2018-02-01",
                     "properties": {
                         "publicAccess": "None"
