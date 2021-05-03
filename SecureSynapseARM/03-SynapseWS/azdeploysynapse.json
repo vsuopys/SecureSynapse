@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
         "name": {
@@ -40,6 +40,7 @@
         },
         "managedVirtualNetwork": {
             "type": "string",
+            "defaultValue": "default",
             "allowedValues": [
                 "default",
                 ""
@@ -82,19 +83,24 @@
             "defaultValue": ""
         },
         "storageAccessTier": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Hot"
         },
         "storageAccountType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Standard_RAGRS"
         },
         "storageSupportsHttpsTrafficOnly": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": true
         },
         "storageKind": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "StorageV2" 
         },
         "storageIsHnsEnabled": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": true
         },
         "userObjectId": {
             "type": "string",
@@ -194,11 +200,12 @@
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "variables": {},
                     "resources": [
+                        /*
                         {
                             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
                             "apiVersion": "2018-09-01-preview",
@@ -210,7 +217,7 @@
                                 "principalType": "ServicePrincipal"
                             }
                         }
-                        /*,
+                        ,
                         { // This block does not work
                             "condition": "[parameters('setSbdcRbacOnStorageAccount')]",
                             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
@@ -240,7 +247,7 @@
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "variables": {},
@@ -297,7 +304,7 @@
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "variables": {},

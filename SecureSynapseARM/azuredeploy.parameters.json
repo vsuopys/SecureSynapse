@@ -2,29 +2,29 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "createJumpVM": {
-            "value": "false" 
-        },
         "virtualNetworks_vnet_name": {
-            "value": "vnet-customer2"
+            "value": "vnet-customer"
         },
         "virtualNetwork_address_block": {
             "value": "172.17.0.0/16"
         },
         "virtualNetwork_appsubnet_address_block": {
-            "value": "172.17.3.0/24"
+            "value": "172.17.3.0/26"
         },
         "virtualNetwork_datasubnet_address_block": {
-            "value": "172.17.2.0/24"
+            "value": "172.17.2.0/26"
         },
         "virtualNetwork_gateway_address_block": {
-            "value": "172.17.1.0/24"
+            "value": "172.17.1.0/26"
         },
         "virtualNetwork_default_address_block": {
-            "value": "172.17.0.0/24"
+            "value": "172.17.0.0/26"
+        },
+        "createJumpVM": {
+            "value": false
         },
         "virtualMachineName": {
-            "value": "jumpVM2"
+            "value": "jumpVM"
         },
         "virtualMachineSize": {
             "value": "Standard_D2ds_v4"
@@ -39,7 +39,7 @@
             "value": "cloudsa"
         },
         "adminPassword": {
-            "value": "ChangeThisPwd!" 
+            "value": "" // TODO: Fill in parameter value
         },
         "storageWorkloadType": {
             "value": "General"
@@ -56,11 +56,29 @@
         "logPath": {
             "value": "G:\\SQLLog"
         },
+        "createSynapseWS": {
+            "value": true
+        },
+        "createNewStorageAccount": {
+            "value": true
+        },
+        "dataLakeAccount": {
+            "value": "secsyndlac"
+        },
+        "dataLakeAccountContainer": {
+            "value": "synapsefilesystem"
+        },
+        "synapseWSName": {
+            "value": "secsynapse-ws"
+        },
+        "allowAllConnections": {
+            "value": true
+        },
         "sqlAdminLogin": {
             "value": "sqladminuser"
         },
         "sqlAdminPassword": {
-            "value": "" 
+            "value": "" // TODO: Fill in parameter value
         }
     }
 }

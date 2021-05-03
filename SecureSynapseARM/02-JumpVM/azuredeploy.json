@@ -3,8 +3,8 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "createJumpVM": {
-        "type": "String",
-        "defaultValue": "false",
+        "type": "bool",
+        "defaultValue": false,
         "metadata": {
           "description": "Do you want to create a VM with SSMS and the ability to securely access Synapse Studio?"
         }
@@ -141,8 +141,9 @@
       }
     },
     "variables": {
-      "networkInterfaceName": "[concat(parameters('virtualMachineName'), uniqueString(resourceGroup().id), '-nic')]",
-      "networkSecurityGroupName": "[concat(parameters('virtualMachineName'), uniqueString(resourceGroup().id), '-nsg')]",
+      "uniqueSuffix": "[uniqueString(resourceGroup().id)]",
+      "networkInterfaceName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nic')]",
+      "networkSecurityGroupName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nsg')]",
       "networkSecurityGroupRules": [
         {
           "name": "RDP",
@@ -158,7 +159,7 @@
           }
         }
       ],
-      "publicIpAddressName": "[concat(parameters('virtualMachineName'), uniqueString(resourceGroup().id), '-publicip')]",
+      "publicIpAddressName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-publicip')]",
       "publicIpAddressType": "Static",
       "publicIpAddressSku": "Basic",
       "diskConfigurationType": "NEW",
@@ -177,7 +178,7 @@
     },
     "resources": [
       {
-        "condition": "[bool(parameters('createJumpVM'))]",
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/publicIpAddresses",
         "apiVersion": "2020-06-01",
         "name": "[variables('publicIpAddressName')]",
@@ -190,7 +191,7 @@
         }
       },
       {
-        "condition": "[bool(parameters('createJumpVM'))]",
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkSecurityGroupName')]",
@@ -200,7 +201,7 @@
         }
       },
       {
-        "condition": "[bool(parameters('createJumpVM'))]",
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2020-06-01",
         "name": "[variables('networkInterfaceName')]",
@@ -231,7 +232,7 @@
         }
       },
       {
-        "condition": "[bool(parameters('createJumpVM'))]",
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2020-06-01",
         "name": "[parameters('virtualMachineName')]",
@@ -292,7 +293,7 @@
         }
       },
       {
-        "condition": "[bool(parameters('createJumpVM'))]",
+        "condition": "[parameters('createJumpVM')]",
         "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
         "apiVersion": "2017-03-01-preview",
         "name": "[parameters('virtualMachineName')]",

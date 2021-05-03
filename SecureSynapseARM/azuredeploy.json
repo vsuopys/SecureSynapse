@@ -27,8 +27,8 @@
       "type": "string"
     },
     "createJumpVM": {
-      "type": "string",
-      "defaultValue": "false",
+      "type": "bool",
+      "defaultValue": false,
       "metadata": {
         "description": "Should we create a jumpbox VM with SSMS?"
       }
@@ -137,22 +137,22 @@
       }
     },
     "createSynapseWS": {
-      "type": "string",
-      "defaultValue": "true",
+      "type": "bool",
+      "defaultValue": true,
       "metadata": {
         "description": "Create new Synapse workspace."
       }
     },
     "createNewStorageAccount": {
-      "type": "string",
-      "defaultValue": "true",
+      "type": "bool",
+      "defaultValue": true,
       "metadata": {
         "description": "Create new data lake storage account for Synapse metadata."
       }
     },
     "dataLakeAccount": {
       "type": "string",
-      "defaultValue": "secsynapsedlacct",
+      "defaultValue": "secsyndlac",
       "metadata": {
         "description": "Name of the data lake storage account for Synapse metadata."
       }
@@ -181,8 +181,8 @@
       }
     },
     "allowAllConnections": {
-      "type": "string",
-      "defaultValue": "true",
+      "type": "bool",
+      "defaultValue": true,
       "metadata": {
         "description": "Name of the data lake storage account for Synapse metadata."
       }
@@ -202,6 +202,10 @@
     }
   },
   "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id)]",
+    "dataLakeAccountUnique": "[concat(parameters('dataLakeAccount'), variables('uniqueSuffix'))]",
+    "virtualMachineNameUnique": "[concat(parameters('virtualMachineName'), '-', variables('uniqueSuffix'))]",
+    "synapseWSNameUnique": "[concat(parameters('synapseWSName'), '-', variables('uniqueSuffix'))]",
     "linked-vnet-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/01-Vnet/azuredeploy.json",
     "linked-jumpvm-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/02-JumpVM/azuredeploy.json",
     //"linked-synapsews-template": "https://templatesaz.blob.core.windows.net/securesynapsearm/SecureSynapseARM/03-SynapseWS/azuredeploy.json",
@@ -212,7 +216,7 @@
       "name": "synapseJumpVM",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
-      "condition": "[bool(parameters('createJumpVM'))]",
+      "condition": "[parameters('createJumpVM')]",
       "dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'synapseVnets')]"],
       "properties": {
         "mode": "Incremental",
@@ -222,7 +226,7 @@
         },
         "parameters": {
           "createJumpVM": { "value": "[parameters('createJumpVM')]" },
-          "VirtualMachineName": { "value": "[parameters('VirtualMachineName')]" },
+          "VirtualMachineName": { "value": "[variables('virtualMachineNameUnique')]" },
           "VirtualMachineSize": { "value": "[parameters('VirtualMachineSize')]" },
           "existingVirtualNetworkName": { "value": "[reference('synapseVnets').outputs.virtualNetworkName.value]"},
           "existingVnetResourceGroup": { "value": "[reference('synapseVnets').outputs.resourceGroupName.value]"},
@@ -291,21 +295,21 @@
       "name": "synapseWorkspace",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "condition": "[bool(parameters('createSynapseWS'))]",
+      "condition": "[parameters('createSynapseWS')]",
       "properties": {
         "mode": "Incremental",
         
         "templateLink": {
           "uri": "[variables('linked-synapsews-template2')]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "1.0.0.1"
         },
         "parameters": {
-          "name": { "value": "[parameters('synapseWSName')]" },
-          "defaultDataLakeStorageAccountName": { "value": "[parameters('dataLakeAccount')]" },
+          "name": { "value": "[variables('synapseWSNameUnique')]" },
+          "defaultDataLakeStorageAccountName": { "value": "[variables('dataLakeAccountUnique')]" },
           "defaultDataLakeStorageFilesystemName": { "value": "[parameters('dataLakeAccountContainer')]" },
           "sqlAdministratorLogin": { "value": "[parameters('sqlAdminLogin')]" },
           "sqlAdministratorLoginPassword": { "value": "[parameters('sqlAdminPassword')]" },
-          "allowAllConnections": { "value": "[bool(parameters('allowAllConnections'))]" },
+          "allowAllConnections": { "value": "[parameters('allowAllConnections')]" },
           "isNewStorageAccount": { "value": "[parameters('createNewStorageAccount')]" },
           "managedVirtualNetworkSettings": {
             "value": {
@@ -319,24 +323,40 @@
   ],
   "outputs": {
     "vmName": {
+      "condition": "[parameters('createJumpVM')]",
       "type": "string",
-      "value": "[parameters('VirtualMachineName')]"
+      "value": "[variables('virtualMachineNameUnique')]"
     },
     "vmSize": {
+      "condition": "[parameters('createJumpVM')]",
       "type": "string",
       "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmSize.value]"
     },
     "vmIPAddress": {
+      "condition": "[parameters('createJumpVM')]",
       "type": "string",
       "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmIPAddress.value]"
     },
-    "adminUsername": {
+    "vmAdminUsername": {
+      "condition": "[parameters('createJumpVM')]",
       "type": "String",
       "value": "[reference('synapseJumpVM', '2019-05-01').outputs.adminUsername.value]"
     },
-    "adminPassword": {
-      "type": "securestring",
-      "value": "[parameters('adminPassword')]"
+    "synapseWorkspaceName": {
+      "type": "string",
+      "value": "[reference('synapseWorkspace', '2019-05-01').outputs.synapseWorkspaceName.value]"
+    },
+    "synapseWorkspaceURL": {
+      "type": "string",
+      "value": "[reference('synapseWorkspace', '2019-05-01').outputs.webEndpoint.value]"
+    },
+    "synapseSQL": {
+      "type": "string",
+      "value": "[reference('synapseWorkspace', '2019-05-01').outputs.sqlEndpoint.value]"
+    },
+    "synapseSqlOndemand": {
+      "type": "string",
+      "value": "[reference('synapseWorkspace', '2019-05-01').outputs.ondemandEndpoint.value]"
     }
   }
 }
