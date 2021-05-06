@@ -123,7 +123,7 @@
         }
     },
     "variables": {
-        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+//        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
         "defaultDataLakeStorageAccountUrl": "[concat('https://', parameters('defaultDataLakeStorageAccountName'), '.dfs.core.windows.net')]",
         "webEndpoint": "[concat('https://web.azuresynapse.net?workspace=%2fsubscriptions%2f', parameters('storageSubscriptionID'),'%2fresourceGroups%2f', parameters('location'),'%2fproviders%2fMicrosoft.Synapse%2fworkspaces%2f', parameters('name'))]",
         "devEndpoint": "[concat('https://', parameters('name'), '.dev.azuresynapse.net')]",
@@ -323,10 +323,6 @@
         }
     ],
     "outputs": {
-        "subscriptionId": {
-            "type": "string",
-            "value": "[parameters('storageSubscriptionID')]"
-        },
         "resourceGroupName": {
             "type": "string",
             "value": "[resourceGroup().name]"

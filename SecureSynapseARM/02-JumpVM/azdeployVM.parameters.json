@@ -6,7 +6,7 @@
             "value": false
         },
         "virtualMachineName": {
-            "value": "jumpVM"
+            "value": "VM"
         },
         "virtualMachineSize": {
             "value": "Standard_D2ds_v4"

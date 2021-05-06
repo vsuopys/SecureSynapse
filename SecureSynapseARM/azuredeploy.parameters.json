@@ -21,11 +21,12 @@
             "value": "172.17.0.0/26"
         },
         "createJumpVM": {
-            "value": false
+            "value": "false"
         },
         "virtualMachineName": {
-            "value": "jumpVM"
+            "value": "vm"
         },
+        /*
         "virtualMachineSize": {
             "value": "Standard_D2ds_v4"
         },
@@ -35,12 +36,14 @@
         "sqlSku": {
             "value": "SQLDEV"
         },
+        */
         "adminUsername": {
             "value": "cloudsa"
         },
         "adminPassword": {
             "value": "" // TODO: Fill in parameter value
         },
+        /*
         "storageWorkloadType": {
             "value": "General"
         },
@@ -56,11 +59,12 @@
         "logPath": {
             "value": "G:\\SQLLog"
         },
+        */
         "createSynapseWS": {
-            "value": true
+            "value": "true"
         },
         "createNewStorageAccount": {
-            "value": true
+            "value": "true"
         },
         "dataLakeAccount": {
             "value": "secsyndlac"
@@ -72,7 +76,7 @@
             "value": "secsynapse-ws"
         },
         "allowAllConnections": {
-            "value": true
+            "value": "true"
         },
         "sqlAdminLogin": {
             "value": "sqladminuser"

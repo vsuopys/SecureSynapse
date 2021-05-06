@@ -2,11 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "adminPWD": {
-            "value": "hhhh"
+        "namePLH": {
+            "value": "plhsynapse"
         },
-        "virtualNetworks_vnet_name": {
-            "value": "value"
+        "tagValues": {
+            "value": {}
         }
     }
 }
