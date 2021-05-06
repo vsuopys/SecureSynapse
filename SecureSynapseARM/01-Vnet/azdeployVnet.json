@@ -79,7 +79,7 @@
       "name": "[variables('networkSecurityGroups_appsubnet_name')]",
       "location": "[variables('location')]",
       "properties": {
-        "securityRules": [
+        "securityRules": [           // these service tags required for Synapse Private Link Hub to work
           {
             "name": "ARM-ServiceTag",
             "properties": {
@@ -149,7 +149,7 @@
             }
           },
           {
-            "name": "RDP",
+            "name": "RDP",              // only need this if you have a jumpbox in this subnet
             "properties": {
               "protocol": "TCP",
               "sourcePortRange": "*",
@@ -166,7 +166,7 @@
             }
           },
           {
-            "name": "Port_1433",
+            "name": "Port_1433",         // only need this if you have a VM with SQL in this subnet
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",

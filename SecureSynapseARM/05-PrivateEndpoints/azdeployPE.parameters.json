@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "plhPrivateEndpointName": {
+            "value": "plhub-pe"
+        },
+        "sqlPrivateEndpointName": {
+            "value": "sql-pe"
+        },
+        "sqlOnDemandPrivateEndpointName": {
+            "value": "sqlondemand-pe"
+        },
+        "devPrivateEndpointName": {
+            "value": "dev-pe"
+        },
+        "plhPrivateLinkResource": {
+            "value": "" // this should be the private link hub for Synapse like "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/privateLinkHubs/{privateLinkHubName}"
+        },
+        "sqlPrivateLinkResource": {
+            "value": "" // this should be the workspace name for Synapse like "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{synapseWorkspaceName}"
+        },
+        "plhTargetSubResource": {
+            "value": [
+                "Web"
+            ]
+        },
+        "sqlTargetSubResource": {
+            "value": [
+                "Sql"
+            ]
+        },
+        "sqlOnDemandTargetSubResource": {
+            "value": [
+                "SqlOnDemand"
+            ]
+        },
+        "devTargetSubResource": {
+            "value": [
+                "Dev"
+            ]
+        },
+        "subnet": {
+            "value": "" // format "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}"
+        },
+        "virtualNetworkId": {
+            "value": "" // format "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{vnetName}"
+        }
+    }
+}

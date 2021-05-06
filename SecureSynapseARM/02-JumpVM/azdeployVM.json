@@ -11,7 +11,7 @@
       },
       "virtualMachineName": {
         "type": "String",
-        "defaultValue": "jumpVM",
+        "defaultValue": "VM",
         "metadata": {
           "description": "The name of the VM"
         }
@@ -141,9 +141,11 @@
       }
     },
     "variables": {
-      "uniqueSuffix": "[uniqueString(resourceGroup().id)]",
-      "networkInterfaceName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nic')]",
-      "networkSecurityGroupName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nsg')]",
+      // "uniqueSuffix": "[uniqueString(resourceGroup().id)]",
+      // "networkInterfaceName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nic')]",
+      // "networkSecurityGroupName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-nsg')]",
+      "networkInterfaceName": "[concat(parameters('virtualMachineName'), '-nic')]",
+      "networkSecurityGroupName": "[concat(parameters('virtualMachineName'), '-nsg')]",
       "networkSecurityGroupRules": [
         {
           "name": "RDP",
@@ -159,7 +161,8 @@
           }
         }
       ],
-      "publicIpAddressName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-publicip')]",
+      // "publicIpAddressName": "[concat(parameters('virtualMachineName'), variables('uniqueSuffix'), '-publicip')]",
+      "publicIpAddressName": "[concat(parameters('virtualMachineName'), '-publicip')]",
       "publicIpAddressType": "Static",
       "publicIpAddressSku": "Basic",
       "diskConfigurationType": "NEW",
@@ -324,10 +327,6 @@
       }
     ],
     "outputs": {
-      // "CreateJumpVM": {
-      //   "type": "string",
-      //   "value": "[parameters('createJumpVM')]"
-      // },
       "vmName": {
         "type": "string",
         "value": "[parameters('virtualMachineName')]"
