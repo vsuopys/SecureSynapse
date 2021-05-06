@@ -54,8 +54,11 @@ Run the following commands:
 
 ```powershell
 $sqlvmpassword = ConvertTo-SecureString "your-sqlvm-password" -AsPlainText -Force
+
 $sqlpassword = ConvertTo-SecureString "your-Synapse-password" -AsPlainText -Force
+
 Connect-AzAccount
+
 New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "your-deployment-name" -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json -adminUsername "your-sqlvm-admin-user" -adminPassword $sqlvmpassword -sqlAdminLogin "your-Synapse-admin-user" -sqlAdminPassword $sqlpassword
 ```
 
