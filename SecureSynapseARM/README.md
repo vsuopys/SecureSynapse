@@ -38,11 +38,6 @@ New-AzResourceGroupDeployment
 
 Template parameters specified on the command line will overwrite the defaults in the template.
 
-# Post Deployment Requirements
-1. The jumpbox VM is configured to use AAD authentication. You will need to add yourself to the "Virtual Machine User Login" or "Virtual Machine Administrator Login" roles for this VM or you will not be able to log in with you AAD credentials.
-2. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
-3. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
-
 # Example Calls
 
 ## Powershell
@@ -59,8 +54,13 @@ $sqlpassword = ConvertTo-SecureString "your-Synapse-password" -AsPlainText -Forc
 
 Connect-AzAccount
 
-New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "your-deployment-name" -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json -adminUsername "your-sqlvm-admin-user" -adminPassword $sqlvmpassword -sqlAdminLogin "your-Synapse-admin-user" -sqlAdminPassword $sqlpassword
+New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "your-deployment-name" -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json -adminUsername "your-sqlvm-admin-user" -adminPassword $sqlvmpassword -sqlAdminLogin "your-Synapse-admin-user" -sqlAdminPassword $sqlpassword -allowAllConnections "false" -createJumpVM "true"
 ```
+
+# Post Deployment Requirements
+1. The jumpbox VM is configured to use AAD authentication. You will need to add yourself to the "Virtual Machine User Login" or "Virtual Machine Administrator Login" roles for this VM or you will not be able to log in with you AAD credentials.
+2. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
+3. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
 
 # Notes
 The main ARM template (azuredeploy.json) references several linked templates that are stored in a read only Azure blob account. If you wish to modify these linked templates then you will need to change the main ARM template to point to your local version.
@@ -91,7 +91,7 @@ These values can be overridden on the command line.
       "type": "string"
     },
     "virtualNetwork_default_address_block": {
-      "defaultValue": "172.18.0.0/26",
+      "defaultValue": "172.17.0.0/26",
       "type": "string"
     },
     "createJumpVM": {
