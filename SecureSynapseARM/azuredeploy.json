@@ -387,13 +387,11 @@
       "type": "string",
       "value": "[variables('virtualMachineNameUnique')]"
     },
-    /*
     "vmSize": {
       "condition": "[variables('createJumpVMBool')]",
       "type": "string",
       "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmSize.value]"
     },
-    */
     "vmIPAddress": {
       "condition": "[variables('createJumpVMBool')]",
       "type": "string",

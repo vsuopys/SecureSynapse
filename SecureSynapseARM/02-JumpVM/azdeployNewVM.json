@@ -247,6 +247,18 @@
         }
     ],
     "outputs": {
+        "vmName": {
+            "type": "string",
+            "value": "[parameters('virtualMachineName')]"
+        },
+        "vmSize": {
+            "type": "string",
+            "value": "[parameters('virtualMachineSize')]"
+        },
+        "vmIPAddress": {
+            "type": "string",
+            "value": "[reference(variables('publicIpAddressName'), '2020-05-01').IpAddress]"
+        },
         "adminUsername": {
             "type": "string",
             "value": "[parameters('adminUsername')]"

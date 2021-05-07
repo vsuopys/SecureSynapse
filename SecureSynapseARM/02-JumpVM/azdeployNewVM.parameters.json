@@ -29,7 +29,7 @@
             "value": "default"
         },
         "virtualNetworkId": {
-            "value": ""   // "/subscriptions/2ba972e5-d964-4ff6-9b9b-bf89377f4391/resourceGroups/rg-secsynapse4/providers/Microsoft.Network/virtualNetworks/vnet-customer-rg-secsynapse4"
+            "value": ""   
         },
         "publicIpAddressName": {
             "value": "armJumpVm-ip"
