@@ -66,6 +66,120 @@ New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "yo
 The main ARM template (azuredeploy.json) references several linked templates that are stored in a read only Azure blob account. If you wish to modify these linked templates then you will need to change the main ARM template to point to your local version.
 
 # Parameter Specifications
+```json
+{
+    "virtualNetworks_vnet_name": {
+      "defaultValue": "vnet-customer",
+      "type": "String"
+    },
+    "virtualNetwork_address_block": {
+      "defaultValue": "172.17.0.0/16",
+      "type": "string"
+    },
+    "virtualNetwork_appsubnet_address_block": {
+      "defaultValue": "172.17.3.0/26",
+      "type": "string"
+    },
+    "virtualNetwork_datasubnet_address_block": {
+      "defaultValue": "172.17.2.0/26",
+      "type": "string"
+    },
+    "virtualNetwork_gateway_address_block": {
+      "defaultValue": "172.17.1.0/26",
+      "type": "string"
+    },
+    "virtualNetwork_default_address_block": {
+      "defaultValue": "172.18.0.0/26",
+      "type": "string"
+    },
+    "createJumpVM": {
+      "type": "String",
+      "defaultValue": "false",
+      "metadata": {
+        "description": "Create a jumpbox VM?"
+      }
+    },
+    "virtualMachineName": {
+        "type": "String",
+        "defaultValue": "vm",    // can only be 2 characters because of unique string added to end
+        "metadata": {
+          "description": "The name of the VM"
+        }
+    },
+    "adminUsername": {
+      "type": "String",
+      "defaultValue": "cloudsa",
+      "metadata": {
+        "description": "The admin user name of the VM"
+      }
+    },
+    "adminPassword": {
+      "type": "SecureString",
+      "minLength": 12,
+      "defaultValue": "Thisisnotmypwd!",
+      "metadata": {
+        "description": "The admin password of the VM, 12 characters minimum"
+      }
+    },
+    "createSynapseWS": {
+      "type": "String",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Create new Synapse workspace."
+      }
+    },
+    "createNewStorageAccount": {
+      "type": "String",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Create new data lake storage account for Synapse metadata."
+      }
+    },
+    "dataLakeAccount": {
+      "type": "string",
+      "defaultValue": "secsyndlac",
+      "metadata": {
+        "description": "Name of the data lake storage account for Synapse metadata."
+      }
+    },
+    "dataLakeAccountContainer": {
+      "type": "string",
+      "defaultValue": "synapsefilesystem",
+      "metadata": {
+        "description": "Name of the data lake filesystem for Synapse metadata."
+      }
+    },
+    "synapseWSName": {
+      "type": "string",
+      "defaultValue": "secsynapse-ws",
+      "metadata": {
+        "description": "Name of the Synapse workspace."
+      }
+    },
+    "allowAllConnections": {
+      "type": "String",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Name of the data lake storage account for Synapse metadata."
+      }
+    },
+    "sqlAdminLogin": {
+      "type": "string",
+      "defaultValue": "sqladminuser",
+      "metadata": {
+          "description": "Synapse SQL administrator account name"
+      }
+    },
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+          "description": "description"
+      }
+    }
+}
+```
+
+
 
 virtualNetworks_vnet_name:
     type: String
