@@ -40,45 +40,6 @@
           "description": "The name of the VM"
         }
       },
-      /*
-    "virtualMachineSize": {
-       "type": "String",
-       "defaultValue": "Standard_D2ds_v4",
-       "metadata": {
-         "description": "The virtual machine size."
-       }
-     },
-    "imageOffer": {
-      "type": "String",
-      "defaultValue": "sql2019-ws2019",
-      "allowedValues": [
-        "sql2019-ws2019",
-        "sql2017-ws2019",
-        "SQL2017-WS2016",
-        "SQL2016SP1-WS2016",
-        "SQL2016SP2-WS2016",
-        "SQL2014SP3-WS2012R2",
-        "SQL2014SP2-WS2012R2"
-      ],
-      "metadata": {
-        "description": "Windows Server and SQL Offer"
-      }
-    },
-    "sqlSku": {
-      "type": "String",
-      "defaultValue": "SQLDEV",
-      "allowedValues": [
-        "Standard",
-        "Enterprise",
-        "SQLDEV",
-        "Web",
-        "Express"
-      ],
-      "metadata": {
-        "description": "SQL Server Sku"
-      }
-    },
-    */
     "adminUsername": {
       "type": "String",
       "defaultValue": "cloudsa",
@@ -94,52 +55,6 @@
         "description": "The admin password of the VM, 12 characters minimum"
       }
     },
-    /*
-    "storageWorkloadType": {
-      "type": "String",
-      "defaultValue": "General",
-      "allowedValues": [
-        "General",
-        "OLTP",
-        "DW"
-      ],
-      "metadata": {
-        "description": "SQL Server Workload Type"
-      }
-    },
-    "sqlDataDisksCount": {
-      "type": "int",
-      "defaultValue": 1,
-      "minValue": 1,
-      "maxValue": 8,
-      "metadata": {
-        "description": "Amount of data disks (1TB each) for SQL Data files"
-      }
-    },
-    "dataPath": {
-      "type": "String",
-      "defaultValue": "F:\\SQLData",
-      "metadata": {
-        "description": "Path for SQL Data files. Please choose drive letter from F to Z, and other drives from A to E are reserved for system"
-      }
-    },
-    "sqlLogDisksCount": {
-      "type": "int",
-      "defaultValue": 1,
-      "minValue": 1,
-      "maxValue": 8,
-      "metadata": {
-        "description": "Amount of data disks (1TB each) for SQL Log files"
-      }
-    },
-    "logPath": {
-      "type": "String",
-      "defaultValue": "G:\\SQLLog",
-      "metadata": {
-        "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
-      }
-    },
-    */
     "createSynapseWS": {
       "type": "String",
       "defaultValue": "true",
@@ -227,30 +142,11 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          /*
-          "createJumpVM": { "value": "[variables('createJumpVMBool')]" },
-          "VirtualMachineName": { "value": "[variables('virtualMachineNameUnique')]" },
-          "VirtualMachineSize": { "value": "[parameters('VirtualMachineSize')]" },
-          "existingVirtualNetworkName": { "value": "[reference('synapseVnets').outputs.virtualNetworkName.value]"},
-          "existingVnetResourceGroup": { "value": "[reference('synapseVnets').outputs.resourceGroupName.value]"},
-          "existingSubnetName": { "value": "[reference('synapseVnets').outputs.appSubnetName.value]"},
-          "imageOffer": { "value": "[parameters('imageOffer')]" },
-          "sqlSKU": { "value": "[parameters('sqlSKU')]" },
-          "adminUsername": { "value": "[parameters('adminUsername')]" },
-          "adminPassword": { "value": "[parameters('adminPassword')]" },
-          "storageWorkloadType": { "value": "[parameters('storageWorkloadType')]" },
-          "sqlDataDisksCount": { "value": "[parameters('sqlDataDisksCount')]" },
-          "dataPath": { "value": "[parameters('dataPath')]" },
-          "sqlLogDisksCount": { "value": "[parameters('sqlLogDisksCount')]" },
-          "logPath": { "value": "[parameters('logPath')]" },
-          "location": { "value": "[reference('synapseVnets').outputs.resourceGroupLocation.value]" }
-          */
           "VirtualMachineName": { "value": "[variables('virtualMachineNameUnique')]" },
           "virtualNetworkName": { "value": "[reference('synapseVnets').outputs.virtualNetworkName.value]"},
           "subnetName": { "value": "[reference('synapseVnets').outputs.appSubnetName.value]"},
           "adminUsername": { "value": "[parameters('adminUsername')]" },
-          "adminPassword": { "value": "[parameters('adminPassword')]" },
-//          [reference('synapseVnets').outputs.childVnet.value]
+          "adminPassword": { "value": "[parameters('adminPassword')]" }
         }
       }
     },
@@ -275,31 +171,6 @@
         }
       }
     },
-    /*
-    {
-      "name": "synapseWorkspace",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
-      "properties": {
-        "mode": "Incremental",
-        
-        "templateLink": {
-          "uri": "[variables('linked-synapsews-template')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "createSynapseWS": { "value": "[variables('createSynapseWSBool')]" },
-          "dataLakeAccount": { "value": "[parameters('dataLakeAccount')]" },
-          "dataLakeAccountContainer": { "value": "[parameters('dataLakeAccountContainer')]" },
-          "synapseWSName": { "value": "[parameters('synapseWSName')]" },
-          "allowAllConnections": { "value": "[variables('allowAllConnectionsBool')]" },
-          "createNewStorageACcount": { "value": "[variables('createNewStorageAccountBool')]" },
-          "sqlAdminLogin": { "value": "[parameters('sqlAdminLogin')]" },
-          "sqlAdminPassword": { "value": "[parameters('sqlAdminPassword')]" }
-        }
-      }
-    }
-    */
     {
       "name": "synapseWorkspace",
       "type": "Microsoft.Resources/deployments",

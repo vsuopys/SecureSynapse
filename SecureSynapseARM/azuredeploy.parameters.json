@@ -26,40 +26,12 @@
         "virtualMachineName": {
             "value": "vm"
         },
-        /*
-        "virtualMachineSize": {
-            "value": "Standard_D2ds_v4"
-        },
-        "imageOffer": {
-            "value": "sql2019-ws2019"
-        },
-        "sqlSku": {
-            "value": "SQLDEV"
-        },
-        */
         "adminUsername": {
             "value": "cloudsa"
         },
         "adminPassword": {
             "value": "" // TODO: Fill in parameter value
         },
-        /*
-        "storageWorkloadType": {
-            "value": "General"
-        },
-        "sqlDataDisksCount": {
-            "value": 1
-        },
-        "dataPath": {
-            "value": "F:\\SQLData"
-        },
-        "sqlLogDisksCount": {
-            "value": 1
-        },
-        "logPath": {
-            "value": "G:\\SQLLog"
-        },
-        */
         "createSynapseWS": {
             "value": "true"
         },
