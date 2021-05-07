@@ -255,10 +255,6 @@
             "type": "string",
             "value": "[parameters('virtualMachineSize')]"
         },
-        "vmIPAddress": {
-            "type": "string",
-            "value": "[reference(variables('publicIpAddressName'), '2020-05-01').vmIPAddress]"
-        },
         "adminUsername": {
             "type": "string",
             "value": "[parameters('adminUsername')]"

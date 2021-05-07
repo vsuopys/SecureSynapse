@@ -392,11 +392,6 @@
       "type": "string",
       "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmSize.value]"
     },
-    "vmIPAddress": {
-      "condition": "[variables('createJumpVMBool')]",
-      "type": "string",
-      "value": "[reference('synapseJumpVM', '2019-05-01').outputs.vmIPAddress.value]"
-    },
     "vmAdminUsername": {
       "condition": "[variables('createJumpVMBool')]",
       "type": "String",
