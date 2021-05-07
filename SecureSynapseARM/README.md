@@ -41,7 +41,7 @@ Template parameters specified on the command line will overwrite the defaults in
 # Example Calls
 
 ## Powershell
-Clone or download the Github repo from https://github.com/vsuopys/SecureSynapseARM
+Clone or download the Github repo from https://github.com/vsuopys/SecureSynapse
 
 Switch directory to the lowest SecureSynapseARM folder
 
