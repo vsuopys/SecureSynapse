@@ -1,7 +1,7 @@
 # SecureSynapseARM Structure
 
 This project consists of a driver ARM template that is linked to a number of scoped ARM templates as listed:
-```shell
+```
 * 01-Vnet: creates VNET necessary for deployment
 
 * 02-JumpVM: creates a jumpbox VM (optional)
@@ -59,9 +59,11 @@ New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "yo
 ```
 
 # Post Deployment Requirements
+```
 1. The jumpbox VM is configured to use AAD authentication. You will need to add yourself to the "Virtual Machine User Login" or "Virtual Machine Administrator Login" roles for this VM or you will not be able to log in with you AAD credentials.
 2. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
 3. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
+```
 
 # Notes
 The main ARM template (azuredeploy.json) references several linked templates that are stored in a read only Azure blob account. If you wish to modify these linked templates then you will need to change the main ARM template to point to your local version.
