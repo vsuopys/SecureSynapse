@@ -66,6 +66,8 @@ New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "yo
 The main ARM template (azuredeploy.json) references several linked templates that are stored in a read only Azure blob account. If you wish to modify these linked templates then you will need to change the main ARM template to point to your local version.
 
 # Parameter Specifications
+These values can be overridden on the command line.
+
 ```json
 {
     "virtualNetworks_vnet_name": {
@@ -101,9 +103,10 @@ The main ARM template (azuredeploy.json) references several linked templates tha
     },
     "virtualMachineName": {
         "type": "String",
-        "defaultValue": "vm",    // can only be 2 characters because of unique string added to end
+        "maxLength": 12,
+        "defaultValue": "vm",    
         "metadata": {
-          "description": "The name of the VM"
+          "description": "The name of the VM. Limited to 2 characters because a unique string is appendedin the template."
         }
     },
     "adminUsername": {
@@ -116,9 +119,9 @@ The main ARM template (azuredeploy.json) references several linked templates tha
     "adminPassword": {
       "type": "SecureString",
       "minLength": 12,
-      "defaultValue": "Thisisnotmypwd!",
+      "defaultValue": null,
       "metadata": {
-        "description": "The admin password of the VM, 12 characters minimum"
+        "description": "Pass a value in on the command line. The admin password of the VM, 12 characters minimum."
       }
     },
     "createSynapseWS": {
@@ -172,83 +175,10 @@ The main ARM template (azuredeploy.json) references several linked templates tha
     },
     "sqlAdminPassword": {
       "type": "securestring",
+      "defaultValue": null,
       "metadata": {
-          "description": "description"
+          "description": "Pass a value in on the command line."
       }
     }
 }
 ```
-
-
-
-virtualNetworks_vnet_name:
-    type: String
-    defaultValue: vnet-customer
-
-virtualNetwork_address_block:
-    type: String
-    defaultValue: 172.17.0.0/16
-
-virtualNetwork_appsubnet_address_block:
-    type: String
-    defaultValue: 172.17.3.0/26
-
-virtualNetwork_datasubnet_address_block:
-    type: String
-    defaultValue: 172.17.2.0/26
-
-virtualNetwork_gateway_address_block:
-    type: String
-    defaultValue: 172.17.1.0/26
-
-virtualNetwork_default_address_block:
-    type: String
-    defaultValue: 172.17.0.0/26
-
-createJumpVM:
-    type: Bool
-    defaultValue: false
-
-virtualMachineName:
-    type: String
-    defaultValue: vm
-
-adminUsername:
-    type: String
-    defaultValue: cloudsa
-
-adminPassword:
-    type: secureString
-    defaultValue: null          // pass in parameter value from command line
-
-createSynapseWS:
-    type: Bool
-    defaultValue: true
-
-createNewStorageAccount:
-    type: Bool
-    defaultValue: true
-
-dataLakeAccount:
-    type: String
-    defaultValue: secsyndlac
-
-dataLakeAccountContainer:
-    type: String
-    defaultValue: synapsefilesystem
-
-synapseWSName:
-    type: String
-    defaultValue: secsynapse-ws     // a unique hash based on resource group and deployment name will be appended
-
-allowAllConnections:
-    type: Bool
-    defaultValue: false     // controls access from public internet
-
-sqlAdminLogin:
-    type: String
-    defaultValue: sqladminuser
-
-sqlAdminPassword:
-    type: secureString
-    defaultValue: null      //  pass in parameter value from command line
