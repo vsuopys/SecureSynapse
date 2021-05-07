@@ -19,7 +19,7 @@ The resulting deployment looks like this:
 # Prerequisites
 You must have an existing resource group which will be used for all deployments. Note that Synapse creates a managed resource group as part of the deployment process. The managed resource group is not alway cleaned up if you delete your own resource group.
 
-# Secure Credentials
+## Secure Credentials
 In order to avoid storing passwords in the templates, you must pass a password secure string as a Powershell cmdlet parameter as shown below:
 ```powershell
 $sqlvmpassword = ConvertTo-SecureString "your-sqlvm-password" -AsPlainText -Force
@@ -64,3 +64,77 @@ New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "yo
 
 # Notes
 The main ARM template (azuredeploy.json) references several linked templates that are stored in a read only Azure blob account. If you wish to modify these linked templates then you will need to change the main ARM template to point to your local version.
+
+# Parameter Specifications
+
+virtualNetworks_vnet_name:
+    type: String
+    defaultValue: vnet-customer
+
+virtualNetwork_address_block:
+    type: String
+    defaultValue: 172.17.0.0/16
+
+virtualNetwork_appsubnet_address_block:
+    type: String
+    defaultValue: 172.17.3.0/26
+
+virtualNetwork_datasubnet_address_block:
+    type: String
+    defaultValue: 172.17.2.0/26
+
+virtualNetwork_gateway_address_block:
+    type: String
+    defaultValue: 172.17.1.0/26
+
+virtualNetwork_default_address_block:
+    type: String
+    defaultValue: 172.17.0.0/26
+
+createJumpVM:
+    type: Bool
+    defaultValue: false
+
+virtualMachineName:
+    type: String
+    defaultValue: vm
+
+adminUsername:
+    type: String
+    defaultValue: cloudsa
+
+adminPassword:
+    type: secureString
+    defaultValue: null          // pass in parameter value from command line
+
+createSynapseWS:
+    type: Bool
+    defaultValue: true
+
+createNewStorageAccount:
+    type: Bool
+    defaultValue: true
+
+dataLakeAccount:
+    type: String
+    defaultValue: secsyndlac
+
+dataLakeAccountContainer:
+    type: String
+    defaultValue: synapsefilesystem
+
+synapseWSName:
+    type: String
+    defaultValue: secsynapse-ws     // a unique hash based on resource group and deployment name will be appended
+
+allowAllConnections:
+    type: Bool
+    defaultValue: false     // controls access from public internet
+
+sqlAdminLogin:
+    type: String
+    defaultValue: sqladminuser
+
+sqlAdminPassword:
+    type: secureString
+    defaultValue: null      //  pass in parameter value from command line
