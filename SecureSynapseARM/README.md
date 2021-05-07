@@ -2,19 +2,19 @@
 
 This project consists of a driver ARM template that is linked to a number of scoped ARM templates as listed:
 
-* 01-Vnet
+* 01-Vnet: creates VNET necessary for deployment
 
-* 02-JumpVM
+* 02-JumpVM: creates a jumpbox VM (optional)
 
-* 03-SynapseWS
+* 03-SynapseWS: creates a Synapse workspace with managed Vnet. No provisioned reources (SQL) are created. The workspace can be locked down on the network by setting "allowAllConnections: false"
 
-* 04-PrivateLinkHub
+* 04-PrivateLinkHub: creates a Synapse Private Link Hub to secure access to Synapse Studio
 
-* 05-PrivateEndpoints
+* 05-PrivateEndpoints: creates private endpoints for Synapse Studio (web), dev, sql, and sqlOnDemand access points
 
 The resulting deployment looks like this:
 
-
+![Deployed Architecture](images/deployedArchitecture.png?raw=true "Architecture")
 
 # Prerequisites
 You must have an existing resource group which will be used for all deployments. Note that Synapse creates a managed resource group as part of the deployment process. The managed resource group is not alway cleaned up if you delete your own resource group.
