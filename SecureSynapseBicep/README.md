@@ -4,24 +4,24 @@ This project consists of a driver ARM template that is linked to a number of sco
 ```
 * 01-Vnet: creates VNET necessary for deployment
 
-* 02-JumpVM: creates a jumpbox VM (optional)
+* 02-Vm: creates a jumpbox VM (optional)
 
-* 03-SynapseWS: creates a Synapse workspace with managed Vnet. No provisioned reources (SQL) are created. The workspace can be locked down on the network by setting "allowAllConnections: false"
+* 03-SynapseWs: creates a Synapse workspace with managed Vnet. No provisioned reources (SQL) are created. The workspace can be locked down on the network by setting "allowAllConnections: false"
 
-* 04-PrivateLinkHub: creates a Synapse Private Link Hub to secure access to Synapse Studio
+* 04-SynapseHub: creates a Synapse Private Link Hub to secure access to Synapse Studio
 
-* 05-PrivateEndpoints: creates private endpoints for Synapse Studio (web), dev, sql, and sqlOnDemand access points
+* 05-SynapsePE: creates private endpoints for Synapse Studio (web), dev, sql, and sqlOnDemand access points
 ```
 
 The resulting deployment looks like this:
 
-![Deployed Architecture](images/deployedArchitecture.png?raw=true "Architecture")
+![Deployed Architecture](../SecureSynapseArm/images/deployedArchitecture.png?raw=true "Architecture")
 
 # Prerequisites
 **You must have an existing resource group** which will be used for all deployments. Note that Synapse creates a managed resource group as part of the deployment process. The managed resource group is not alway cleaned up if you delete your own resource group.
 
 ## Secure Credentials
-In order to avoid storing passwords in the templates, you must pass a password secure string as a Powershell cmdlet parameter as shown below:
+In order to avoid storing passwords in the templates, you must pass a password as a parameter as shown below:
 ```powershell
 
 az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p pCreateJumpVm=true pCreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
@@ -31,7 +31,7 @@ Template parameters specified on the command line will overwrite the defaults in
 
 # Example Calls
 
-## Powershell
+## Azure CLI
 Clone or download the Github repo from https://github.com/vsuopys/SecureSynapse.
 
 On your local machine, switch directory to SecureSynapseBicep.
@@ -40,7 +40,7 @@ Run the following commands:
 
 ```powershell
 
-Connect-AzAccount
+az login
 
 az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p pCreateJumpVm=true pCreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
 ```
