@@ -18,7 +18,7 @@ The resulting deployment looks like this:
 ![Deployed Architecture](images/deployedArchitecture.png?raw=true "Architecture")
 
 # Prerequisites
-**You must have an existing resource group** which will be used for all deployments. Note that Synapse creates a managed resource group as part of the deployment process. The managed resource group is not alway cleaned up if you delete your own resource group.
+You **do NOT need to have an existing resource group**. The Bicep deployment will create a default resource group for you (rg-secsyn-bicep). Note that Synapse creates a managed resource group as part of the deployment process. The managed resource group is not always cleaned up if you delete your own resource group.
 
 ## Secure Credentials
 In order to avoid storing passwords in the templates, you must pass a password as a parameter as shown below:
