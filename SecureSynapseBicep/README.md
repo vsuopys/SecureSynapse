@@ -1,4 +1,4 @@
-# SecureSynapseARM Structure
+# SecureSynapseBicep Structure
 
 This project consists of a driver ARM template that is linked to a number of scoped ARM templates as listed:
 ```
