@@ -1,6 +1,6 @@
 # SecureSynapseBicep Structure
 
-This project consists of a driver ARM template that is linked to a number of scoped ARM templates as listed:
+This project consists of a driver Bicep template that is linked to a number of scoped Bicep templates as listed:
 ```
 * 01-Vnet: creates VNET necessary for deployment
 
