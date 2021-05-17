@@ -5,11 +5,6 @@
         "name": {
             "value": "securedsynapse-ws"
         },
-        /*
-        "location": {
-            "value": "" // Pass in from master template
-        },
-        */
         "defaultDataLakeStorageAccountName": {
             "value": "securesynapseadls"
         },
@@ -37,17 +32,12 @@
         "tagValues": {
             "value": {}
         },
-        /*
         "storageSubscriptionID": {
             "value": "" // TODO: Get the subscription ID from master template
-        },
-        "storageResourceGroupName": {
-            "value": "" // TODO: Get the resource group name from master template
         },
         "storageLocation": {
             "value": "" // TODO: Get location from resource group
         },
-        */
         "storageRoleUniqueId": {
             "value": "" 
         },
@@ -79,7 +69,7 @@
             "value": true 
         },
         "userObjectId": {
-            "value": "" // TODO: Need to pass user object ID in as param from master template ie 3612a7c9-a01b-45d7-b023-e8a03915960b
+            "value": "" // TODO: Need to pass user object ID in as param from master template
         },
         "setSbdcRbacOnStorageAccount": {
             "value": true

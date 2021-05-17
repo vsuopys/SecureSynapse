@@ -6,19 +6,19 @@
             "value": "vnet-customer"
           },
           "virtualNetwork_address_block": {
-            "value": "172.18.0.0/16"
+            "value": "172.20.0.0/16"
           },
           "virtualNetwork_appsubnet_address_block": {
-            "value": "172.18.3.0/24"
+            "value": "172.20.3.0/26"
           },
           "virtualNetwork_datasubnet_address_block": {
-            "value": "172.18.2.0/24"
+            "value": "172.20.2.0/26"
           },
           "virtualNetwork_gateway_address_block": {
-            "value": "172.18.1.0/24"
+            "value": "172.20.1.0/26"
           },
           "virtualNetwork_default_address_block": {
-            "value": "172.18.0.0/24"
+            "value": "172.20.0.0/26"
           }
     }
 }

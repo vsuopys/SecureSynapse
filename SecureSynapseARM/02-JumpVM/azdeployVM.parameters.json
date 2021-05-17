@@ -28,8 +28,8 @@
         "subnetName": {
             "value": "default"
         },
-        "virtualNetworkId": {
-            "value": ""   
+        "virtualNetworkName": {
+            "value": ""
         },
         "publicIpAddressName": {
             "value": "armJumpVm-ip"
@@ -46,19 +46,16 @@
         "virtualMachineComputerName": {
             "value": "armJumpVm"
         },
-        "virtualMachineRG": {
-            "value": "rg-secsynapse4"
-        },
         "osDiskType": {
             "value": "StandardSSD_LRS"
         },
         "virtualMachineSize": {
             "value": "Standard_DS11_v2"
         },
-        "adminUsername": {
+        "vmAdminUsername": {
             "value": "cloudsa"
         },
-        "adminPassword": {
+        "vmAdminPassword": {
             "value": null
         },
         "patchMode": {

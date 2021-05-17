@@ -54,10 +54,6 @@
             "type": "string",
             "defaultValue": "[subscription().subscriptionId]"
         },
-        "storageResourceGroupName": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().name]"
-        },
         "storageLocation": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
@@ -68,11 +64,11 @@
         },
         "isNewStorageAccount": {
             "type": "bool",
-            "defaultValue": false
+            "defaultValue": true
         },
         "isNewFileSystemOnly": {
             "type": "bool",
-            "defaultValue": false
+            "defaultValue": true
         },
         "adlaResourceId": {
             "type": "string",
@@ -104,15 +100,15 @@
         },
         "userObjectId": {
             "type": "string",
-            "defaultValue": "3612a7c9-a01b-45d7-b023-e8a03915960b" // My ID. Pass from parent template instead.
+            "defaultValue": "" // Optional ID of user running the template deployment. Used to set a user's RBAC on storage. Pass from parent template.
         },
         "setSbdcRbacOnStorageAccount": {
             "type": "bool",
-            "defaultValue": false
+            "defaultValue": false     // used in conjunction with userObjectId
         },
         "setWorkspaceMsiByPassOnStorageAccount": {
             "type": "bool",
-            "defaultValue": false
+            "defaultValue": true
         },
         "workspaceStorageAccountProperties": {
             "type": "object",
@@ -123,7 +119,7 @@
         }
     },
     "variables": {
-//        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
         "defaultDataLakeStorageAccountUrl": "[concat('https://', parameters('defaultDataLakeStorageAccountName'), '.dfs.core.windows.net')]",
         "webEndpoint": "[concat('https://web.azuresynapse.net?workspace=%2fsubscriptions%2f', parameters('storageSubscriptionID'),'%2fresourceGroups%2f', parameters('location'),'%2fproviders%2fMicrosoft.Synapse%2fworkspaces%2f', parameters('name'))]",
         "devEndpoint": "[concat('https://', parameters('name'), '.dev.azuresynapse.net')]",
@@ -188,50 +184,36 @@
             "tags": "[parameters('tagValues')]"
         },
         {
+
             "condition": "[parameters('setWorkspaceIdentityRbacOnStorageAccount')]",
-            "apiVersion": "2019-05-01",
-            "name": "StorageRoleDeploymentResource",
-            "type": "Microsoft.Resources/deployments",
-            "subscriptionId": "[parameters('storageSubscriptionID')]",
-            "resourceGroup": "[parameters('storageResourceGroupName')]",
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
             "dependsOn": [
-                "[concat('Microsoft.Synapse/workspaces/', parameters('name'))]"
+                "[concat('Microsoft.Synapse/workspaces/', parameters('name'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('defaultDataLakeStorageAccountName'))]"
             ],
+            "name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', parameters('name'), '/', parameters('storageRoleUniqueId'))))]",
+            "location": "[parameters('storageLocation')]",
             "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "variables": {},
-                    "resources": [
-                        /*
-                        {
-                            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-                            "apiVersion": "2018-09-01-preview",
-                            "name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', parameters('name'), '/', parameters('storageRoleUniqueId'))))]",
-                            "location": "[parameters('storageLocation')]",
-                            "properties": {
-                                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
-                                "principalId": "[reference(concat('Microsoft.Synapse/workspaces/', parameters('name')), '2019-06-01-preview', 'Full').identity.principalId]",
-                                "principalType": "ServicePrincipal"
-                            }
-                        }
-                        ,
-                        { // This block does not work
-                            "condition": "[parameters('setSbdcRbacOnStorageAccount')]",
-                            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-                            "apiVersion": "2018-09-01-preview",
-                            "name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', parameters('userObjectId'), '/', parameters('storageRoleUniqueId'))))]",
-                            "properties": {
-                                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
-                                "principalId": "[parameters('userObjectId')]",
-                                "principalType": "User"
-                            }
-                        }
-                        */
-                    ]
-                }
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
+                "principalId": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('name')), '2019-06-01-preview', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+
+        },
+        { // This block does not work unless the user ID is passed in to template
+            "condition": "[parameters('setSbdcRbacOnStorageAccount')]",
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "dependsOn": [
+                "[concat('Microsoft.Synapse/workspaces/', parameters('name'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('defaultDataLakeStorageAccountName'))]"
+            ],
+            "name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', parameters('userObjectId'), '/', parameters('storageRoleUniqueId'))))]",
+            "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
+                "principalId": "[parameters('userObjectId')]",
+                "principalType": "User"
             }
         },
         {
@@ -239,8 +221,6 @@
             "apiVersion": "2019-05-01",
             "name": "UpdateStorageAccountNetworkingAcls",
             "type": "Microsoft.Resources/deployments",
-            "subscriptionId": "[parameters('storageSubscriptionID')]",
-            "resourceGroup": "[parameters('storageResourceGroupName')]",
             "dependsOn": [
                 "[concat('Microsoft.Synapse/workspaces/', parameters('name'))]"
             ],
@@ -257,7 +237,11 @@
                             "apiVersion": "2021-01-01",
                             "location": "[parameters('storageLocation')]",
                             "name": "[parameters('defaultDataLakeStorageAccountName')]",
-                            "properties": "[parameters('workspaceStorageAccountProperties')]"
+                            "properties": "[parameters('workspaceStorageAccountProperties')]",
+                            "kind": "[parameters('storageKind')]",
+                            "sku": {
+                                "name": "[parameters('storageAccountType')]"
+                            }
                         }
                     ]
                 }
@@ -299,8 +283,6 @@
             "apiVersion": "2019-05-01",
             "name": "[parameters('defaultDataLakeStorageFilesystemName')]",
             "type": "Microsoft.Resources/deployments",
-            "subscriptionId": "[parameters('storageSubscriptionID')]",
-            "resourceGroup": "[parameters('storageResourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -319,7 +301,10 @@
                         }
                     ]
                 }
-            }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('defaultDataLakeStorageAccountName'))]"
+            ]
         }
     ],
     "outputs": {
@@ -334,6 +319,14 @@
         "synapseWorkspaceName": {
             "type": "string",
             "value": "[parameters('name')]"
+        },
+        "defaultDataLakeStorageAccountName": {
+            "type": "string",
+            "value": "[parameters('defaultDataLakeStorageAccountName')]"
+        },
+        "synapseStorageString": {
+            "type": "string",
+            "value": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', parameters('name'), '/', parameters('storageRoleUniqueId'))))]"
         },
         "webEndpoint": {
             "type": "string",

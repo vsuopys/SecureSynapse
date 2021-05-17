@@ -15,10 +15,10 @@
             "value": "dev-pe"
         },
         "plhPrivateLinkResource": {
-            "value": "" // this should be the private link hub for Synapse like "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/privateLinkHubs/{privateLinkHubName}"
+            "value": "" 
         },
         "sqlPrivateLinkResource": {
-            "value": "" // this should be the workspace name for Synapse like "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{synapseWorkspaceName}"
+            "value": "" 
         },
         "plhTargetSubResource": {
             "value": [
@@ -41,10 +41,10 @@
             ]
         },
         "subnet": {
-            "value": "" // format "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}"
+            "value": "" 
         },
         "virtualNetworkId": {
-            "value": "" // format "/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{vnetName}"
+            "value": "" 
         }
     }
 }

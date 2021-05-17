@@ -6,31 +6,31 @@
             "value": "vnet-customer"
         },
         "virtualNetwork_address_block": {
-            "value": "172.17.0.0/16"
+            "value": "172.20.0.0/16"
         },
         "virtualNetwork_appsubnet_address_block": {
-            "value": "172.17.3.0/26"
+            "value": "172.20.3.0/26"
         },
         "virtualNetwork_datasubnet_address_block": {
-            "value": "172.17.2.0/26"
+            "value": "172.20.2.0/26"
         },
         "virtualNetwork_gateway_address_block": {
-            "value": "172.17.1.0/26"
+            "value": "172.20.1.0/26"
         },
         "virtualNetwork_default_address_block": {
-            "value": "172.17.0.0/26"
+            "value": "172.20.0.0/26"
         },
         "createJumpVM": {
-            "value": "false"
+            "value": "true"
         },
         "virtualMachineName": {
             "value": "vm"
         },
-        "adminUsername": {
+        "vmAdminUsername": {
             "value": "cloudsa"
         },
-        "adminPassword": {
-            "value": "" // TODO: Fill in parameter value
+        "vmAdminPassword": {
+            "value": ""
         },
         "createSynapseWS": {
             "value": "true"
@@ -48,13 +48,13 @@
             "value": "secsynapse-ws"
         },
         "allowAllConnections": {
-            "value": "true"
+            "value": "false"
         },
         "sqlAdminLogin": {
             "value": "sqladminuser"
         },
         "sqlAdminPassword": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         }
     }
 }

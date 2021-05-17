@@ -49,11 +49,11 @@
             "type": "string",
             "defaultValue": "Standard_DS11_v2"
         },
-        "adminUsername": {
+        "vmAdminUsername": {
             "type": "string",
             "defaultValue": "cloudsa"
         },
-        "adminPassword": {
+        "vmAdminPassword": {
             "type": "secureString",
             "defaultValue": null
         },
@@ -182,8 +182,8 @@
                 },
                 "osProfile": {
                     "computerName": "[parameters('virtualMachineName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]",
+                    "adminUsername": "[parameters('vmAdminUsername')]",
+                    "adminPassword": "[parameters('vmAdminPassword')]",
                     "windowsConfiguration": {
                         "enableAutomaticUpdates": true,
                         "provisionVmAgent": true,
@@ -255,9 +255,9 @@
             "type": "string",
             "value": "[parameters('virtualMachineSize')]"
         },
-        "adminUsername": {
+        "vmAdminUsername": {
             "type": "string",
-            "value": "[parameters('adminUsername')]"
+            "value": "[parameters('vmAdminUsername')]"
         }
     }
 }

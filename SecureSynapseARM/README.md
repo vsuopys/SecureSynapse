@@ -23,7 +23,7 @@ The resulting deployment looks like this:
 ## Secure Credentials
 In order to avoid storing passwords in the templates, you must pass a password secure string as a Powershell cmdlet parameter as shown below:
 ```powershell
-$sqlvmpassword = ConvertTo-SecureString "your-sqlvm-password" -AsPlainText -Force
+$vmpassword = ConvertTo-SecureString "your-vm-password" -AsPlainText -Force
 
 $sqlpassword = ConvertTo-SecureString "your-Synapse-password" -AsPlainText -Force
 
@@ -31,8 +31,8 @@ New-AzResourceGroupDeployment
     -ResourceGroupName "your-resource-group"
     -TemplateFile azuredeploy.json
     -TemplateParameterFile azuredeploy.parameters.json
-    -adminUsername "your-sqlvm-admin-user"
-    -adminPassword $sqlvmpassword
+    -vmAdminUsername "your-vm-admin-user"
+    -vmAdminPassword $vmpassword
     -sqlAdminLogin "your-Synapse-admin-user"
     -sqlAdminPassword $sqlpassword
 ```
@@ -49,20 +49,21 @@ On your local machine, switch directory to SecureSynapseARM.
 Run the following commands:
 
 ```powershell
-$sqlvmpassword = ConvertTo-SecureString "your-sqlvm-password" -AsPlainText -Force
+$vmpassword = ConvertTo-SecureString "your-vm-password" -AsPlainText -Force
 
 $sqlpassword = ConvertTo-SecureString "your-Synapse-password" -AsPlainText -Force
 
 Connect-AzAccount
 
-New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "your-deployment-name" -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json -adminUsername "your-sqlvm-admin-user" -adminPassword $sqlvmpassword -sqlAdminLogin "your-Synapse-admin-user" -sqlAdminPassword $sqlpassword -allowAllConnections "false" -createJumpVM "true"
+New-AzResourceGroupDeployment -ResourceGroupName "your-resource-group" -Name "your-deployment-name" -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json -vmAdminUsername "your-vm-admin-user" -vmAdminPassword $vmpassword -sqlAdminLogin "your-Synapse-admin-user" -sqlAdminPassword $sqlpassword -allowAllConnections "false" -createJumpVM "true"
 ```
 
 # Post Deployment Requirements
 ```
 1. The jumpbox VM is configured to use AAD authentication. You will need to add yourself to the "Virtual Machine User Login" or "Virtual Machine Administrator Login" roles for this VM or you will not be able to log in with you AAD credentials.
-2. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
-3. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
+2. Make sure the Windows OS is fully updated. You may have to check for updates multiple times after rebooting if needed.
+3. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
+4. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
 ```
 
 # Notes
@@ -112,14 +113,14 @@ These values can be overridden on the command line.
           "description": "The name of the VM. Limited to 2 characters because a unique string is appendedin the template."
         }
     },
-    "adminUsername": {
+    "vmAdminUsername": {
       "type": "String",
       "defaultValue": "cloudsa",
       "metadata": {
         "description": "The admin user name of the VM"
       }
     },
-    "adminPassword": {
+    "vmAdminPassword": {
       "type": "SecureString",
       "minLength": 12,
       "defaultValue": null,
