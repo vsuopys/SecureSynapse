@@ -24,7 +24,7 @@ You **do NOT need to have an existing resource group**. The Bicep deployment wil
 In order to avoid storing passwords in the templates, you must pass a password as a parameter as shown below:
 ```powershell
 
-az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p pCreateJumpVm=true pCreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
+az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p CreateJumpVm=true CreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
 ```
 
 Template parameters specified on the command line will overwrite the defaults in the template.
@@ -42,7 +42,7 @@ Run the following commands:
 
 az login
 
-az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p pCreateJumpVm=true pCreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
+az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-name"" -p CreateJumpVm=true CreateSynapseWs=true vmAdminPassword="your-vm-password" synapseAdminPassword="your-Synapse-password"
 ```
 
 # Post Deployment Requirements
@@ -60,24 +60,24 @@ The main Bicep template (main.bicep) references several linked templates (aka. m
 These values can be overridden on the command line.
 
 ```bicep
-param pVnetName string = 'vnet-customer-bicep'
-param pVnetAddressCidr string = '172.19.0.0/16'
-param pDefaultSubnetCidr string = '172.19.0.0/26'
-param pGatewaySubnetCidr string = '172.19.1.0/26'
-param pPrivateEndpointSubnetCidr string = '172.19.2.0/26'
-param pDataSubnetCidr string = '172.19.3.0/26'
+param VnetName string = 'vnet-customer-bicep'
+param VnetAddressCidr string = '172.19.0.0/16'
+param DefaultSubnetCidr string = '172.19.0.0/26'
+param GatewaySubnetCidr string = '172.19.1.0/26'
+param PrivateEndpointSubnetCidr string = '172.19.2.0/26'
+param DataSubnetCidr string = '172.19.3.0/26'
 
-param pCreateJumpVm bool = true
-param pVmName string = 'vm'
+param CreateJumpVm bool = true
+param VmName string = 'vm'
 param vmAdminName string = 'cloudsa'
 param vmAdminPassword string
 
-param pCreateSynapseWs bool = true
+param CreateSynapseWs bool = true
 param synapseAdminName string = 'adminuser'
 param synapseAdminPassword string
-param pSynapseWsName string = 'secsynbic-ws'
-param pAllowAllConnections bool = false
-param pCreateNewStorageAccount bool = true
-param pStorageAccountName string = 'secbicdlac'
-param pStorageFilesystemName string = 'synapsefilesystem'
+param SynapseWsName string = 'secsynbic-ws'
+param AllowAllConnections bool = false
+param CreateNewStorageAccount bool = true
+param StorageAccountName string = 'secbicdlac'
+param StorageFilesystemName string = 'synapsefilesystem'
 ```
