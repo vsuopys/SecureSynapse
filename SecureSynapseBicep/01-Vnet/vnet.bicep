@@ -9,10 +9,10 @@ param createJumpVm bool
 var subnet_datasubnet_name = 'datavm-sub'
 var subnet_appsubnet_name = 'appvm-sub'
 var networkSecurityGroups_appsubnet_name_var = 'nsg-appvm-sub'
-//var networkSecurityGroups_datasubnet_name_var = 'nsg-datavm-sub'
+var networkSecurityGroups_datasubnet_name_var = 'nsg-datavm-sub'
 var location = resourceGroup().location
 
-/*
+
 resource networkSecurityGroups_datasubnet_name 'Microsoft.Network/networkSecurityGroups@2020-05-01' = {
   name: networkSecurityGroups_datasubnet_name_var
   location: location
@@ -55,7 +55,6 @@ resource networkSecurityGroups_datasubnet_name 'Microsoft.Network/networkSecurit
     ]
   }
 }
-*/
 
 resource networkSecurityGroups_appsubnet_name 'Microsoft.Network/networkSecurityGroups@2020-05-01' = {
   name: networkSecurityGroups_appsubnet_name_var
@@ -147,48 +146,9 @@ resource networkSecurityGroups_appsubnet_name 'Microsoft.Network/networkSecurity
           destinationAddressPrefixes: []
         }
       }
-      /*
-      {
-        name: 'Port_1433'
-        properties: {
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '1433'
-          sourceAddressPrefix: 'Sql'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 310
-          direction: 'Inbound'
-          sourcePortRanges: []
-          destinationPortRanges: []
-          sourceAddressPrefixes: []
-          destinationAddressPrefixes: []
-        }
-      }
-      */
     ]
   }
 }
-
-/*
-resource networkSecurityGroups_appsubnet_name_Port_1433 'Microsoft.Network/networkSecurityGroups/securityRules@2020-05-01' = {
-  name: '${networkSecurityGroups_appsubnet_name.name}/Port_1433'
-  properties: {
-    protocol: '*'
-    sourcePortRange: '*'
-    destinationPortRange: '1433'
-    sourceAddressPrefix: 'Sql'
-    destinationAddressPrefix: 'VirtualNetwork'
-    access: 'Allow'
-    priority: 310
-    direction: 'Inbound'
-    sourcePortRanges: []
-    destinationPortRanges: []
-    sourceAddressPrefixes: []
-    destinationAddressPrefixes: []
-  }
-}
-*/
 
 
 // Allow access to jumpbox via RDP if one is created
@@ -255,11 +215,9 @@ resource virtualNetworks_vnet_name_resource 'Microsoft.Network/virtualNetworks@2
         name: subnet_datasubnet_name
         properties: {
           addressPrefix: virtualNetwork_datasubnet_address_block
-          /*
           networkSecurityGroup: {
             id: networkSecurityGroups_datasubnet_name.id
           }
-          */
           serviceEndpoints: []
           delegations: []
           privateEndpointNetworkPolicies: 'Disabled'
@@ -271,6 +229,9 @@ resource virtualNetworks_vnet_name_resource 'Microsoft.Network/virtualNetworks@2
     enableDdosProtection: false
     enableVmProtection: false
   }
+  dependsOn:[
+    networkSecurityGroups_appsubnet_name
+  ]
 }
 
 output resourceGroupName string = resourceGroup().name

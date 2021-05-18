@@ -6,6 +6,7 @@ param sqlAdministratorLogin string = 'adminuser'
 
 @secure()
 param sqlAdministratorLoginPassword string = ''
+
 param setWorkspaceIdentityRbacOnStorageAccount bool = true
 param allowAllConnections bool = false
 
@@ -20,6 +21,8 @@ param grantWorkspaceIdentityControlForSql string = 'Enabled'
   ''
 ])
 param managedVirtualNetwork string = 'default'
+
+param managedVirtualNetworkSettings object
 param tagValues object = {}
 
 // Storage parameters
@@ -36,17 +39,23 @@ param storageSupportsHttpsTrafficOnly bool = true
 param storageKind string = 'StorageV2'
 param storageIsHnsEnabled bool = true
 param userObjectId string = ''   // used to give a specific user RBAC on data lake
-param setSbdcRbacOnStorageAccount bool = false
+param setSbdcRbacOnStorageAccount bool = false   // used with userObjectId
 param setWorkspaceMsiByPassOnStorageAccount bool = false
 param workspaceStorageAccountProperties object = {}
-param managedVirtualNetworkSettings object
+
 
 var storageBlobDataContributorRoleID = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var defaultDataLakeStorageAccountUrl = 'https://${defaultDataLakeStorageAccountName}.dfs.core.windows.net'
+
 // var workspaceStorageRBACName = '${defaultDataLakeStorageAccountName}/Microsoft.Authorization/${guid(subscription().subscriptionId)}'
 // var userStorageRBACName = '${defaultDataLakeStorageAccountName}/Microsoft.Authorization/${guid('${resourceGroup().id}/${storageBlobDataContributorRoleID}/${userObjectId}/${storageRoleUniqueId}')}'
-var workspaceStorageRBACName = '${guid(resourceGroup().name, 'Workspace Storage Blob Contributor')}'
-var userStorageRBACName = '${guid(resourceGroup().name, 'User Storage Blob Contributor')}'
+
+var workspaceStorageRBACName = '${guid(resourceGroup().name, 'Workspace Storage Blob Contributor')}'   // value needs to be consistent across deployment runs
+
+// var workspaceStorageRBACName = '${guid(resourceGroup().name, storageRoleUniqueId, 'Workspace Storage Blob Contributor')}'
+
+var userStorageRBACName = '${guid(resourceGroup().name, 'User Storage Blob Contributor')}'   // value needs to be consistent across deployment runs
+
 var webEndpoint = 'https://web.azuresynapse.net?workspace=%2fsubscriptions%2f${storageSubscriptionID}%2fresourceGroups%2f${location}%2fproviders%2fMicrosoft.Synapse%2fworkspaces%2f${workspaceName}'
 var devEndpoint = 'https://${workspaceName}.dev.azuresynapse.net'
 var onDemandEndpoint = '${workspaceName}-ondemand.sql.azuresynapse.net'
@@ -121,32 +130,20 @@ resource synapseWorkspace_sqlControl_default 'Microsoft.Synapse/workspaces/manag
   }
 }
 
-resource setWorkspaceIdOnStorage  'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = if (setWorkspaceIdentityRbacOnStorageAccount) { //  'Microsoft.Storage/storageAccounts/providers/roleAssignments@2020-04-01-preview' = if (setWorkspaceIdentityRbacOnStorageAccount) {
+resource setWorkspaceIdRBACOnStorage  'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = if (setWorkspaceIdentityRbacOnStorageAccount) {
   name: workspaceStorageRBACName
-  scope: defaultDataLakeStorageAccountName_resource
+  scope: defaultDataLakeStorageAccountName_resource 
   properties: {
     roleDefinitionId: '${subscriptionResourceId('Microsoft.Authorization/roleDefinitions', storageBlobDataContributorRoleID)}'
-    principalId: reference(synapseWorkspace_resource.id, '2019-06-01-preview','Full').identity.principalId   //reference(synapseWorkspace_resource.id, '2019-06-01-preview', 'Full').identity.principalId
+    principalId: synapseWorkspace_resource.identity.principalId
     principalType: 'ServicePrincipal'
   }
   dependsOn: [
+    synapseWorkspace_resource
     defaultDataLakeStorageAccountName_resource
   ]
 }
-/*
-resource setWorkspaceIdOnStorage  'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = if (setWorkspaceIdentityRbacOnStorageAccount) { //  'Microsoft.Storage/storageAccounts/providers/roleAssignments@2020-04-01-preview' = if (setWorkspaceIdentityRbacOnStorageAccount) {
-  name: workspaceStorageRBACName
-  // location: storageLocation
-  properties: {
-    roleDefinitionId: '${subscriptionResourceId('Microsoft.Authorization/roleDefinitions', storageBlobDataContributorRoleID)}'
-    // roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', storageBlobDataContributorRoleID)
-    principalId: reference(synapseWorkspace_resource.id, '2019-06-01-preview','Full').identity.principalId   //reference(synapseWorkspace_resource.id, '2019-06-01-preview', 'Full').identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-  dependsOn: [
-    defaultDataLakeStorageAccountName_resource
-  ]
-}
+
 
 resource defaultDataLakeStorageAccountName_Microsoft_Authorization_id_storageBlobDataContributorRoleID_userObjectId_storageRoleUniqueId 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = if (setSbdcRbacOnStorageAccount) {  //'Microsoft.Storage/storageAccounts/providers/roleAssignments@2020-04-01-preview' = if (setSbdcRbacOnStorageAccount) {
   name: userStorageRBACName
@@ -163,7 +160,7 @@ resource defaultDataLakeStorageAccountName_Microsoft_Authorization_id_storageBlo
   ]
 }
 
-
+/*
 resource name_SetMsiBypass 'Microsoft.Storage/storageAccounts@2021-02-01' = if (setWorkspaceMsiByPassOnStorageAccount) {
   name: defaultDataLakeStorageAccountName
   location: storageLocation
