@@ -239,21 +239,7 @@ resource virtualNetworkLinkSql 'Microsoft.Network/privateDnsZones/virtualNetwork
     PrivateDnsZone_Sql_resource
   ]
 }
-/*
-resource virtualNetworkLinkSqlOnDemand 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
-  name: '${PrivateDnsZone_Sql_resource.name}/${PrivateDnsZone_Sql_resource.name}-link'
-  location: 'global'
-  properties: {
-    registrationEnabled: true
-    virtualNetwork: {
-      id: p_VirtualNetworkId
-    }
-  }
-  dependsOn: [
-    PrivateDnsZone_Sql_resource
-  ]
-}
-*/
+
 resource virtualNetworkLinkDev 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
   name: '${PrivateDnsZone_Dev_resource.name}/${PrivateDnsZone_Dev_resource.name}-link'
   location: 'global'

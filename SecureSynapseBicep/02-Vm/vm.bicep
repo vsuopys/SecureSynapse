@@ -102,7 +102,7 @@ resource virtualMachineName_resource 'Microsoft.Compute/virtualMachines@2020-12-
     }
     storageProfile: {
       osDisk: {
-        createOption: 'FromImage'  //'fromImage'
+        createOption: 'FromImage'
         managedDisk: {
           storageAccountType: osDiskType
         }
@@ -127,7 +127,6 @@ resource virtualMachineName_resource 'Microsoft.Compute/virtualMachines@2020-12-
       adminPassword: adminPassword
       windowsConfiguration: {
         enableAutomaticUpdates: true
-        //provisionVmAgent: true
         provisionVMAgent: true
         patchSettings: {
           enableHotpatching: enableHotpatching
