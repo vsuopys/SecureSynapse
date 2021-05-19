@@ -47,12 +47,7 @@ param workspaceStorageAccountProperties object = {}
 var storageBlobDataContributorRoleID = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var defaultDataLakeStorageAccountUrl = 'https://${defaultDataLakeStorageAccountName}.dfs.core.windows.net'
 
-// var workspaceStorageRBACName = '${defaultDataLakeStorageAccountName}/Microsoft.Authorization/${guid(subscription().subscriptionId)}'
-// var userStorageRBACName = '${defaultDataLakeStorageAccountName}/Microsoft.Authorization/${guid('${resourceGroup().id}/${storageBlobDataContributorRoleID}/${userObjectId}/${storageRoleUniqueId}')}'
-
 var workspaceStorageRBACName = '${guid(resourceGroup().name, 'Workspace Storage Blob Contributor')}'   // value needs to be consistent across deployment runs
-
-// var workspaceStorageRBACName = '${guid(resourceGroup().name, storageRoleUniqueId, 'Workspace Storage Blob Contributor')}'
 
 var userStorageRBACName = '${guid(resourceGroup().name, 'User Storage Blob Contributor')}'   // value needs to be consistent across deployment runs
 
