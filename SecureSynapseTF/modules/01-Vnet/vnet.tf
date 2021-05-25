@@ -1,17 +1,3 @@
-# terraform {
-# 	required_version = ">= 0.13"
-# }
-
-# provider "azurerm" {
-# 	features {}
-# }
-
-variable createVnet {
-	type        = bool
-	default     = false
-	description = "Should I do anything?"
-}
-
 variable resourceGroupName {
 	type        = string
 	default     = "rg-secsyn-tf"
@@ -85,7 +71,7 @@ variable dataSubnetCidr {
 }
 
 locals  {
-    vnetNsgRules = {
+    privateEndpointNsgRules = {
         ARM-ServiceTag = {
             name = "ARM-ServiceTag"
             protocol: "Tcp"
@@ -148,21 +134,6 @@ locals  {
         }
     }
     dataNsgRules = {
-        RDP = {
-            name: "RDP"
-            protocol: "Tcp"
-            sourcePortRange: "*"
-            destinationPortRange: "3389"
-            sourceAddressPrefix: "*"
-            destinationAddressPrefix: var.privateEndpointSubnetCidr
-            access: "Allow"
-            priority: 300
-            direction: "Inbound"
-            sourcePortRanges: []
-            destinationPortRanges: []
-            sourceAddressPrefixes: []
-            destinationAddressPrefixes: []
-        }
         HTTPS_Port_443 = {
             name: "HTTPS_Port_443"
             protocol: "Tcp"
@@ -179,33 +150,10 @@ locals  {
             destinationAddressPrefixes: []
         }
     }
-    privateEndpointNsgRules = {
-        RDP = {
-            name: "RDP"
-            protocol: "Tcp"
-            sourcePortRange: "*"
-            destinationPortRange: "3389"
-            sourceAddressPrefix: "*"
-            destinationAddressPrefix: var.privateEndpointSubnetCidr
-            access: "Allow"
-            priority: 300
-            direction: "Inbound"
-            sourcePortRanges: []
-            destinationPortRanges: []
-            sourceAddressPrefixes: []
-            destinationAddressPrefixes: []
-        }
-    }
+
 }
 
-
-# resource "azurerm_resource_group" "deploymentRG" {
-# 	name     = var.resourceGroup
-# 	location = var.resourceGroupLocation
-# }
-
 resource "azurerm_virtual_network" "vnet" {
-    count               = var.createVnet ? 1 : 0
 	name                = var.vnetName 
 	address_space       = [var.vnetCidr]
 	location            = var.resourceGroupLocation
@@ -213,96 +161,41 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "defaultSubnet" {
-	count                = var.createVnet ? 1 : 0
     name                 = var.defaultSubnetName
 	resource_group_name  = var.resourceGroupName
-	virtual_network_name = azurerm_virtual_network.vnet[count.index].name
+	virtual_network_name = azurerm_virtual_network.vnet.name
 	address_prefixes     = [var.defaultSubnetCidr]
 }
 
 resource "azurerm_subnet" "gatewaySubnet" {
-    count                = var.createVnet ? 1 : 0
     name                 = var.gatewaySubnetName
 	resource_group_name  = var.resourceGroupName
-	virtual_network_name = azurerm_virtual_network.vnet[count.index].name
+	virtual_network_name = azurerm_virtual_network.vnet.name
 	address_prefixes     = [var.gatewaySubnetCidr]
 }
 
 resource "azurerm_subnet" "privateEndpointSubnet" {
-    count                = var.createVnet ? 1 : 0
 	name                 = var.privateEndpointSubnetName
 	resource_group_name  = var.resourceGroupName
-	virtual_network_name = azurerm_virtual_network.vnet[count.index].name
+	virtual_network_name = azurerm_virtual_network.vnet.name
 	address_prefixes     = [var.privateEndpointSubnetCidr]
 }
 
 resource "azurerm_subnet" "dataSubnet" {
-    count                = var.createVnet ? 1 : 0
 	name                 = var.dataSubnetName
 	resource_group_name  = var.resourceGroupName
-	virtual_network_name = azurerm_virtual_network.vnet[count.index].name
+	virtual_network_name = azurerm_virtual_network.vnet.name
 	address_prefixes     = [var.dataSubnetCidr]
 }
 
-resource "azurerm_network_security_group" "vnetNsg" {
-    count               = var.createVnet ? 1 : 0
-	name                = "nsg-${var.vnetName}"
-	location            = var.resourceGroupLocation
-	resource_group_name = var.resourceGroupName
-}
-
-resource "azurerm_network_security_rule" "vnetNsgRules" {
-	for_each                    = var.createVnet ? local.vnetNsgRules : {}
-        name                        = each.key
-        direction                   = each.value.direction
-        access                      = each.value.access
-        priority                    = each.value.priority
-        protocol                    = each.value.protocol
-        source_port_range           = each.value.sourcePortRange
-        destination_port_range      = each.value.destinationPortRange
-        source_address_prefix       = each.value.sourceAddressPrefix
-        destination_address_prefix  = each.value.destinationAddressPrefix
-        resource_group_name         = var.resourceGroupName
-        network_security_group_name = azurerm_network_security_group.vnetNsg[0].name
-    depends_on = [
-        azurerm_network_security_group.vnetNsg[0]
-    ]
-}
-
-resource "azurerm_network_security_group" "dataNsg" {
-    count               = var.createVnet ? 1 : 0
-	name                = "nsg-${var.dataSubnetName}"
-	location            = var.resourceGroupLocation
-	resource_group_name = var.resourceGroupName
-}
-
-resource "azurerm_network_security_rule" "dataNsgRules" {
-	for_each                    = var.createVnet ? local.dataNsgRules : {} 
-        name                        = each.key
-        direction                   = each.value.direction
-        access                      = each.value.access
-        priority                    = each.value.priority
-        protocol                    = each.value.protocol
-        source_port_range           = each.value.sourcePortRange
-        destination_port_range      = each.value.destinationPortRange
-        source_address_prefix       = each.value.sourceAddressPrefix
-        destination_address_prefix  = each.value.destinationAddressPrefix
-        resource_group_name         = var.resourceGroupName
-        network_security_group_name = azurerm_network_security_group.dataNsg[0].name
-    depends_on = [
-        azurerm_network_security_group.dataNsg[0]
-    ]
-}
-
 resource "azurerm_network_security_group" "privateEndpointNsg" {
-    count               = var.createVnet ? 1 : 0
 	name                = "nsg-${var.privateEndpointSubnetName}"
 	location            = var.resourceGroupLocation
 	resource_group_name = var.resourceGroupName
 }
 
 resource "azurerm_network_security_rule" "privateEndpointNsgRules" {
-	for_each                    = var.createVnet ? local.privateEndpointNsgRules : {}
+	for_each                    = local.privateEndpointNsgRules
         name                        = each.key
         direction                   = each.value.direction
         access                      = each.value.access
@@ -313,8 +206,62 @@ resource "azurerm_network_security_rule" "privateEndpointNsgRules" {
         source_address_prefix       = each.value.sourceAddressPrefix
         destination_address_prefix  = each.value.destinationAddressPrefix
         resource_group_name         = var.resourceGroupName
-        network_security_group_name = azurerm_network_security_group.privateEndpointNsg[0].name
+        network_security_group_name = azurerm_network_security_group.privateEndpointNsg.name
     depends_on = [
-        azurerm_network_security_group.privateEndpointNsg[0]
+        azurerm_network_security_group.privateEndpointNsg
     ]
+}
+
+resource "azurerm_network_security_group" "dataNsg" {
+	name                = "nsg-${var.dataSubnetName}"
+	location            = var.resourceGroupLocation
+	resource_group_name = var.resourceGroupName
+}
+
+resource "azurerm_network_security_rule" "dataNsgRules" {
+	for_each                    = local.dataNsgRules 
+        name                        = each.key
+        direction                   = each.value.direction
+        access                      = each.value.access
+        priority                    = each.value.priority
+        protocol                    = each.value.protocol
+        source_port_range           = each.value.sourcePortRange
+        destination_port_range      = each.value.destinationPortRange
+        source_address_prefix       = each.value.sourceAddressPrefix
+        destination_address_prefix  = each.value.destinationAddressPrefix
+        resource_group_name         = var.resourceGroupName
+        network_security_group_name = azurerm_network_security_group.dataNsg.name
+    depends_on = [
+        azurerm_network_security_group.dataNsg
+    ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg-dataSubnetDeployment" {
+  subnet_id                 = azurerm_subnet.dataSubnet.id
+  network_security_group_id = azurerm_network_security_group.dataNsg.id
+  depends_on = [
+    azurerm_network_security_group.dataNsg,
+    azurerm_subnet.dataSubnet
+  ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg-privateEndpointSubnetDeployment" {
+  subnet_id                 = azurerm_subnet.privateEndpointSubnet.id
+  network_security_group_id = azurerm_network_security_group.privateEndpointNsg.id
+  depends_on = [
+    azurerm_network_security_group.privateEndpointNsg,
+    azurerm_subnet.privateEndpointSubnet
+  ]
+}
+
+output privateEndpointSubnetId {
+  value       = azurerm_subnet.privateEndpointSubnet.id
+  description = "The ID of the subnet containg private endpoints"
+  depends_on  = []
+}
+
+output privateEndpointNsgId {
+  value       = azurerm_network_security_group.privateEndpointNsg.id
+  description = "The ID of the NSG containg private endpoints"
+  depends_on  = []
 }
