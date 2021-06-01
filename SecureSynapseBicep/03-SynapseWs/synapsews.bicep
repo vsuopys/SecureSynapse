@@ -30,7 +30,7 @@ param storageSubscriptionID string = subscription().subscriptionId
 param storageLocation string = resourceGroup().location
 param storageRoleUniqueId string = newGuid()
 param isNewStorageAccount bool = true
-param isNewFileSystemOnly bool = false
+param isNewFileSystemOnly bool = true
 // param adlaResourceId string = ''
 param managedResourceGroupName string = ''   // auto assigned if blank
 param storageAccessTier string = 'Hot'
@@ -56,13 +56,17 @@ var devEndpoint = 'https://${workspaceName}.dev.azuresynapse.net'
 var onDemandEndpoint = '${workspaceName}-ondemand.sql.azuresynapse.net'
 var sqlEndpoint = '${workspaceName}.sql.azuresynapse.net'
 
-resource defaultDataLakeStorageAccountName_resource 'Microsoft.Storage/storageAccounts@2018-02-01' = if (isNewStorageAccount) {
+resource defaultDataLakeStorageAccountName_resource 'Microsoft.Storage/storageAccounts@2021-02-01' = if (isNewStorageAccount) {
   name: defaultDataLakeStorageAccountName
   location: storageLocation
   properties: {
     accessTier: storageAccessTier
     supportsHttpsTrafficOnly: storageSupportsHttpsTrafficOnly
     isHnsEnabled: storageIsHnsEnabled
+    networkAcls: {
+       defaultAction: 'Deny'
+    }
+    allowBlobPublicAccess: false
   }
   sku: {
     name: storageAccountType
@@ -71,7 +75,7 @@ resource defaultDataLakeStorageAccountName_resource 'Microsoft.Storage/storageAc
   tags: {}
 }
 
-resource defaultDataLakeStorageAccountName_default_defaultDataLakeStorageFilesystemName 'Microsoft.Storage/storageAccounts/blobServices/containers@2018-02-01' = if (isNewStorageAccount) {
+resource defaultDataLakeStorageAccountName_default_defaultDataLakeStorageFilesystemName 'Microsoft.Storage/storageAccounts/blobServices/containers@2018-02-01' = if (isNewFileSystemOnly) {
   name: '${defaultDataLakeStorageAccountName}/default/${defaultDataLakeStorageFilesystemName}'
   properties: {
     publicAccess: 'None'

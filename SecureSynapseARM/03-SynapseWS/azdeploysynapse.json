@@ -256,7 +256,8 @@
             "properties": {
                 "accessTier": "[parameters('storageAccessTier')]",
                 "supportsHttpsTrafficOnly": "[parameters('storageSupportsHttpsTrafficOnly')]",
-                "isHnsEnabled": "[parameters('storageIsHnsEnabled')]"
+                "isHnsEnabled": "[parameters('storageIsHnsEnabled')]",
+                "allowBlobPublicAccess": false
             },
             "sku": {
                 "name": "[parameters('storageAccountType')]"

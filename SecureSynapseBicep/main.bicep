@@ -10,55 +10,55 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-01-01' = {
 }
 
 //Vnet parameters
-param VnetName string = 'vnet-customer-bicep'
-param VnetAddressCidr string = '172.19.0.0/16'
-param DefaultSubnetCidr string = '172.19.0.0/26'
-param GatewaySubnetCidr string = '172.19.1.0/26'
-param PrivateEndpointSubnetCidr string = '172.19.2.0/26'
-param DataSubnetCidr string = '172.19.3.0/26'
+param vnetName string = 'vnet-customer-bicep'
+param vnetAddressCidr string = '172.19.0.0/16'
+param defaultSubnetCidr string = '172.19.0.0/26'
+param gatewaySubnetCidr string = '172.19.1.0/26'
+param privateEndpointSubnetCidr string = '172.19.2.0/26'
+param dataSubnetCidr string = '172.19.3.0/26'
 
 // VM parameters
-param CreateJumpVm bool = true
-param VmName string = 'vm'
+param createJumpVm bool = true
+param vmName string = 'vm'
 param vmAdminName string = 'cloudsa'
 @secure()
 param vmAdminPassword string
 
 // Synapse parameters
-param CreateSynapseWs bool = true
+param createSynapseWs bool = true
 param synapseAdminName string = 'adminuser'
 @secure()
 param synapseAdminPassword string
-param SynapseWsName string = 'secsynbic-ws'
-param AllowAllConnections bool = false
+param synapseWsName string = 'secsynbic-ws'
+param allowAllConnections bool = false
 // userObjectId        // use this parameter to apply Storage Blob Contributor to a user on the Synapse storage account
-param CreateNewStorageAccount bool = true
-param WorkspaceIdentityRbacOnStorageAccount bool = true
-param StorageAccountName string = 'secbicdlac'
-param StorageFilesystemName string = 'synapsefilesystem'
+param createNewStorageAccount bool = true
+param workspaceIdentityRbacOnStorageAccount bool = true
+param storageAccountName string = 'secbicdlac'
+param storageFilesystemName string = 'synapsefilesystem'
 
 // Generate unique names
 var vUniqueSuffix = uniqueString(rg.name, deployment().name)
-var vUniqueStorageAccount = '${StorageAccountName}${vUniqueSuffix}'
-var vUniqueVmName =  '${VmName}${vUniqueSuffix}'
-var vUniqueSynapseWsName = '${SynapseWsName}-${vUniqueSuffix}'
-var vUniqueVnetName = '${VnetName}-${rg.name}'
+var vUniqueStorageAccount = '${storageAccountName}${vUniqueSuffix}'
+var vUniqueVmName =  '${vmName}${vUniqueSuffix}'
+var vUniqueSynapseWsName = '${synapseWsName}-${vUniqueSuffix}'
+var vUniqueVnetName = '${vnetName}-${rg.name}'
 
 module synapseVnets '01-Vnet/vnet.bicep' = {
   name: 'synapseVnets'
   scope: rg
   params: {
     virtualNetworks_vnet_name: vUniqueVnetName
-    virtualNetwork_address_block: VnetAddressCidr
-    virtualNetwork_appsubnet_address_block: PrivateEndpointSubnetCidr
-    virtualNetwork_datasubnet_address_block: DataSubnetCidr
-    virtualNetwork_gateway_address_block: GatewaySubnetCidr
-    virtualNetwork_default_address_block: DefaultSubnetCidr
-    createJumpVm: CreateJumpVm
+    virtualNetwork_address_block: vnetAddressCidr
+    virtualNetwork_appsubnet_address_block: privateEndpointSubnetCidr
+    virtualNetwork_datasubnet_address_block: dataSubnetCidr
+    virtualNetwork_gateway_address_block: gatewaySubnetCidr
+    virtualNetwork_default_address_block: defaultSubnetCidr
+    createJumpVm: createJumpVm
   }
 }
 
-module synapseJumpVm '02-Vm/vm.bicep' = if (CreateJumpVm) {
+module synapseJumpVm '02-Vm/vm.bicep' = if (createJumpVm) {
   name: 'synapseJumpVm'
   scope: rg
   params: {
@@ -73,19 +73,19 @@ module synapseJumpVm '02-Vm/vm.bicep' = if (CreateJumpVm) {
   ]
 }
 
-module synapseWorkspace '03-SynapseWs/synapsews.bicep' = if (CreateSynapseWs) {
+module synapseWorkspace '03-SynapseWs/synapsews.bicep' = if (createSynapseWs) {
   name: 'synapseWorkspace'
   scope: resourceGroup(rg.name)
   params: {
     workspaceName: vUniqueSynapseWsName
     defaultDataLakeStorageAccountName: vUniqueStorageAccount
-    defaultDataLakeStorageFilesystemName: StorageFilesystemName
+    defaultDataLakeStorageFilesystemName: storageFilesystemName
     sqlAdministratorLogin: synapseAdminName
     sqlAdministratorLoginPassword: synapseAdminPassword
     // userObjectId
-    allowAllConnections: AllowAllConnections
-    isNewStorageAccount: CreateNewStorageAccount
-    setWorkspaceIdentityRbacOnStorageAccount: WorkspaceIdentityRbacOnStorageAccount
+    allowAllConnections: allowAllConnections
+    isNewStorageAccount: createNewStorageAccount
+    setWorkspaceIdentityRbacOnStorageAccount: workspaceIdentityRbacOnStorageAccount
     managedVirtualNetworkSettings: {
       allowedAadTenantIdsForLinking: []
       preventDataExfiltration: true
@@ -93,7 +93,7 @@ module synapseWorkspace '03-SynapseWs/synapsews.bicep' = if (CreateSynapseWs) {
   }
 }
 
-module synapsePrivateLinkHub  '04-SynapseHub/synapsehub.bicep' = if (CreateSynapseWs) {
+module synapsePrivateLinkHub  '04-SynapseHub/synapsehub.bicep' = if (createSynapseWs) {
   name: 'synapsePrivateLinkHub'
   scope: rg
   params: {
@@ -104,7 +104,7 @@ module synapsePrivateLinkHub  '04-SynapseHub/synapsehub.bicep' = if (CreateSynap
   ]
 }
 
-module synapsePrivateEndpoint '05-SynapsePE/privateendpoints.bicep' = if (CreateSynapseWs) {   //   '05-SynapsePE/synapsepe.bicep' = if (CreateSynapseWs) {
+module synapsePrivateEndpoint '05-SynapsePE/privateendpoints.bicep' = if (createSynapseWs) {   //   '05-SynapsePE/synapsepe.bicep' = if (createSynapseWs) {
   name: 'synapsePrivateEndpoint'
   scope: rg
   params: {
@@ -122,17 +122,17 @@ module synapsePrivateEndpoint '05-SynapsePE/privateendpoints.bicep' = if (Create
   ]
 }
 
-output vmName string = CreateJumpVm ? vUniqueVmName : 'N/A'
-output vmSize string = CreateJumpVm ? reference('synapseJumpVm', '2019-05-01').outputs.vmSize.value : 'N/A'
-output vmAdminUsername string = CreateJumpVm ? reference('synapseJumpVm', '2019-05-01').outputs.adminUsername.value : 'N/A'
+output vmName string = createJumpVm ? vUniqueVmName : 'N/A'
+output vmSize string = createJumpVm ? reference('synapseJumpVm', '2019-05-01').outputs.vmSize.value : 'N/A'
+output vmAdminUsername string = createJumpVm ? reference('synapseJumpVm', '2019-05-01').outputs.adminUsername.value : 'N/A'
 
-output synapseWorkspaceName string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapseWorkspaceName.value : 'N/A'
-output synapseWorkspaceURL string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.webEndpoint.value : 'N/A'
-output synapseStorageAccount string = CreateSynapseWs ? vUniqueStorageAccount : 'N/A'
-output synapseStorageString string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapseStorageString.value : 'N/A'
-output synapseSQL string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.sqlEndpoint.value : 'N/A'
-output synapseSqlOndemand string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.ondemandEndpoint.value : 'N/A'
-output synapsePrincipalId string = CreateSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapsePrincipalId.value : 'N/A'
+output synapseWorkspaceName string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapseWorkspaceName.value : 'N/A'
+output synapseWorkspaceURL string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.webEndpoint.value : 'N/A'
+output synapseStorageAccount string = createSynapseWs ? vUniqueStorageAccount : 'N/A'
+output synapseStorageString string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapseStorageString.value : 'N/A'
+output synapseSQL string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.sqlEndpoint.value : 'N/A'
+output synapseSqlOndemand string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.ondemandEndpoint.value : 'N/A'
+output synapsePrincipalId string = createSynapseWs ? reference('synapseWorkspace', '2019-05-01').outputs.synapsePrincipalId.value : 'N/A'
 
 output synapseHubName string = reference('synapsePrivateLinkHub', '2019-05-01').outputs.synapseHubName.value
 
