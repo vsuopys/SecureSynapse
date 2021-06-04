@@ -2,13 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualNetworks_vnet_name": {
+    "virtualNetwork_vnet_name": {
       "type": "String"
     },
     "virtualNetwork_address_block": {
       "type": "string"
     },
+    "virtualNetwork_appsubnet_name": {
+      "type": "string"
+    },
     "virtualNetwork_appsubnet_address_block": {
+      "type": "string"
+    },
+    "virtualNetwork_datasubnet_name": {
       "type": "string"
     },
     "virtualNetwork_datasubnet_address_block": {
@@ -22,10 +28,8 @@
     }
   },
   "variables": {
-    "subnet_datasubnet_name": "datavm-sub",
-    "subnet_appsubnet_name": "appvm-sub",
-    "networkSecurityGroups_appsubnet_name": "nsg-appvm-sub",
-    "networkSecurityGroups_datasubnet_name": "nsg-datavm-sub",
+    "networkSecurityGroups_appsubnet_name": "[concat('nsg-', parameters('virtualNetwork_appsubnet_name'))]",
+    "networkSecurityGroups_datasubnet_name": "[concat('nsg-', parameters('virtualNetwork_datasubnet_name'))]",
     "location": "[resourceGroup().location]"
   },
   "resources": [
@@ -232,9 +236,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-05-01",
-      "name": "[concat(parameters('virtualNetworks_vnet_name'), '/default')]",
+      "name": "[concat(parameters('virtualNetwork_vnet_name'), '/default')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_name'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "[parameters('virtualNetwork_default_address_block')]",
@@ -246,9 +250,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-05-01",
-      "name": "[concat(parameters('virtualNetworks_vnet_name'), '/GatewaySubnet')]",
+      "name": "[concat(parameters('virtualNetwork_vnet_name'), '/GatewaySubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_name'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "[parameters('virtualNetwork_gateway_address_block')]",
@@ -261,7 +265,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-05-01",
-      "name": "[parameters('virtualNetworks_vnet_name')]",
+      "name": "[parameters('virtualNetwork_vnet_name')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroups_appsubnet_name'))]",
@@ -294,19 +298,24 @@
             }
           },
           {
-            "name": "[variables('subnet_appsubnet_name')]",
+            "name": "[parameters('virtualNetwork_appsubnet_name')]",
             "properties": {
               "addressPrefix": "[parameters('virtualNetwork_appsubnet_address_block')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroups_appsubnet_name'))]"
               },
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"     // this will be needed to allow ADLS storage to be exposed to the app subnet
+                }
+              ],
               "delegations": [],
               "privateEndpointNetworkPolicies": "Disabled",
               "privateLinkServiceNetworkPolicies": "Enabled"
             }
           },
           {
-            "name": "[variables('subnet_datasubnet_name')]",
+            "name": "[parameters('virtualNetwork_datasubnet_name')]",
             "properties": {
               "addressPrefix": "[parameters('virtualNetwork_datasubnet_address_block')]",
               "networkSecurityGroup": {
@@ -327,9 +336,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-05-01",
-      "name": "[concat(parameters('virtualNetworks_vnet_name'), '/',variables('subnet_appsubnet_name'))]",
+      "name": "[concat(parameters('virtualNetwork_vnet_name'), '/',parameters('virtualNetwork_appsubnet_name'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_vnet_name'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroups_appsubnet_name'))]"
       ],
       "properties": {
@@ -345,9 +354,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-05-01",
-      "name": "[concat(parameters('virtualNetworks_vnet_name'), '/',variables('subnet_datasubnet_name'))]",
+      "name": "[concat(parameters('virtualNetwork_vnet_name'), '/',parameters('virtualNetwork_datasubnet_name'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_vnet_name'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroups_datasubnet_name'))]"
       ],
       "properties": {
@@ -377,15 +386,15 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "value": "[parameters('virtualNetworks_vnet_name')]"
+      "value": "[parameters('virtualNetwork_vnet_name')]"
     },
     "appSubnetName": {
       "type": "string",
-      "value": "[variables('subnet_appsubnet_name')]"
+      "value": "[parameters('virtualNetwork_appsubnet_name')]"
     },
     "dataSubnetName": {
       "type": "string",
-      "value": "[variables('subnet_datasubnet_name')]"
+      "value": "[parameters('virtualNetwork_datasubnet_name')]"
     }
   }
 }

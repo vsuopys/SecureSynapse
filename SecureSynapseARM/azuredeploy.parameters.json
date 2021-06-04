@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworks_vnet_name": {
+        "virtualNetwork_vnet_name": {
             "value": "vnet-customer"
         },
         "virtualNetwork_address_block": {
@@ -45,7 +45,7 @@
             "value": "synapsefilesystem"
         },
         "synapseWSName": {
-            "value": "secsynapse-ws"
+            "value": "secsynarm-ws"
         },
         "allowAllConnections": {
             "value": "false"

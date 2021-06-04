@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "value": "securedsynapse-ws"
+            "value": "secsynarm-ws"
         },
         "defaultDataLakeStorageAccountName": {
             "value": "securesynapseadls"
@@ -22,6 +22,9 @@
         },
         "allowAllConnections": {
             "value": true
+        },
+        "subnetNameForAcls": {
+            "value": ""
         },
         "grantWorkspaceIdentityControlForSql": {
             "value": "Enabled"

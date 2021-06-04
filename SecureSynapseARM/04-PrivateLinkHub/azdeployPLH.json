@@ -2,9 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
-        "namePLH": {
+        "hubName": {
             "type": "string",
-            "defaultValue": "plhsynapse"
+            "defaultValue": "hubsynapse"
         },
         "tagValues": {
             "type": "object",
@@ -13,14 +13,14 @@
     },
     "variables": {
 //        "uniqueSuffix": "[uniqueString(resourceGroup().id)]",            // not needed if unique name is passed in
-//        "namePLHUnique": "[concat(parameters('namePLH'), variables('uniqueSuffix'))]",  
+//        "hubNameUnique": "[concat(parameters('hubName'), variables('uniqueSuffix'))]",  
         "location_v": "[resourceGroup().location]"
     },
     "resources": [
         {
             "apiVersion": "2019-06-01-preview",
-//            "name": "[variables('namePLHUnique')]",              // not needed if unique name is passed in
-            "name": "[parameters('namePLH')]",
+//            "name": "[variables('hubNameUnique')]",              // not needed if unique name is passed in
+            "name": "[parameters('hubName')]",
             "location": "[variables('location_v')]",
             "type": "Microsoft.Synapse/privateLinkHubs",
             "identity": {
@@ -35,7 +35,7 @@
     "outputs": {
         "synapsePLHName": {
             "type": "string",
-            "value": "[parameters('namePLH')]"
+            "value": "[parameters('hubName')]"
         }
     }
 }

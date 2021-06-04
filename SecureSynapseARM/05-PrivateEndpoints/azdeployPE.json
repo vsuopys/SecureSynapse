@@ -2,9 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "plhPrivateEndpointName": {
+        "hubPrivateEndpointName": {
             "type": "string",
-            "defaultValue": "plhub-pe"
+            "defaultValue": "hub-pe"
         },
         "sqlPrivateEndpointName": {
             "type": "string",
@@ -18,13 +18,13 @@
             "type": "string",
             "defaultValue": "dev-pe"
         },
-        "plhPrivateLinkResource": {
+        "hubPrivateLinkResource": {
             "type": "string"
         },
         "sqlPrivateLinkResource": {
             "type": "string"
         },
-        "plhTargetSubResource": {
+        "hubTargetSubResource": {
             "type": "array",
              "defaultValue": [
                 "Web"
@@ -68,7 +68,7 @@
     "resources": [
         {
             "location": "[variables('location')]",
-            "name": "[parameters('plhPrivateEndpointName')]",
+            "name": "[parameters('hubPrivateEndpointName')]",
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2020-03-01",
             "properties": {
@@ -77,10 +77,10 @@
                 },
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[parameters('plhPrivateEndpointName')]",
+                        "name": "[parameters('hubPrivateEndpointName')]",
                         "properties": {
-                            "privateLinkServiceId": "[parameters('plhPrivateLinkResource')]",
-                            "groupIds": "[parameters('plhTargetSubResource')]"
+                            "privateLinkServiceId": "[parameters('hubPrivateLinkResource')]",
+                            "groupIds": "[parameters('hubTargetSubResource')]"
                         }
                     }
                 ]
@@ -155,7 +155,7 @@
             "name": "[variables('privateDnsDeploymentName')]",
             "type": "Microsoft.Resources/deployments",
             "dependsOn": [
-                "[parameters('plhPrivateEndpointName')]",
+                "[parameters('hubPrivateEndpointName')]",
                 "[parameters('sqlPrivateEndpointName')]",
                 "[parameters('sqlOnDemandPrivateEndpointName')]",
                 "[parameters('devPrivateEndpointName')]"
@@ -168,7 +168,7 @@
                     "resources": [
                         {
                             "apiVersion": "2017-05-10",
-                            "name": "[concat('PrivateDnsZone-synapse-', variables('guid_v'))]",  //        "[concat('PrivateDnsZone-plh-', variables('guid_v'))]",
+                            "name": "[concat('PrivateDnsZone-synapse-', variables('guid_v'))]",  //        "[concat('PrivateDnsZone-hub-', variables('guid_v'))]",
                             "type": "Microsoft.Resources/deployments",
                             "subscriptionId": "[subscription().subscriptionId]",
                             "resourceGroup": "[variables('virtualNetworkResourceGroupName')]",
@@ -285,7 +285,7 @@
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('virtualNetworkResourceGroupName')]",
             "dependsOn": [
-                "[parameters('plhPrivateEndpointName')]",
+                "[parameters('hubPrivateEndpointName')]",
                 "[parameters('sqlPrivateEndpointName')]",
                 "[parameters('sqlOnDemandPrivateEndpointName')]",
                 "[parameters('devPrivateEndpointName')]",
@@ -300,7 +300,7 @@
                         {
                             "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
                             "apiVersion": "2020-03-01",
-                            "name": "[concat(parameters('plhPrivateEndpointName'), '/', 'default')]",
+                            "name": "[concat(parameters('hubPrivateEndpointName'), '/', 'default')]",
                             "location": "[variables('location')]",
                             "properties": {
                                 "privateDnsZoneConfigs": [
@@ -367,9 +367,9 @@
         }
     ],
     "outputs": {
-        "plhPrivateEndpointName": {
+        "hubPrivateEndpointName": {
             "type": "string",
-            "value": "[parameters('plhPrivateEndpointName')]"
+            "value": "[parameters('hubPrivateEndpointName')]"
         },
         "sqlPrivateEndpointName": {
             "type": "string",

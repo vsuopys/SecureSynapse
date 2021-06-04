@@ -51,10 +51,18 @@ az deployment sub create -f ./main.bicep -l "your-region"  -n "your-deployment-n
 2. Make sure the Windows OS is fully updated. You may have to check for updates multiple times after rebooting if needed.
 3. You will need to configure the jumpbox VM with Microsoft endpoint protection. On the VM, go to "Settings/Account/Access Work or School". Disconnect from Microsoft Azure AD, reboot, and re-login as the local administrator account. Go back to "Settings/Account/Access Work or School" and add a new connection to Microsoft Azure AD with your Microsoft account. This will register the VM with Microsoft endpoint protection.
 4. (Optional) It would be best practice to enable just in time access through the Azure Portal for this VM. You may be prompted for VPN and disk encryption which are optional.
+
+5. Manually create a private endpoint for the default Synapse data lake account in the "privateEndpointSubnet". This will allow Synapse Studio to see files in the storage account. I will fix this in the near future.
+6. Manually create a *managed* private endpoint for the default Synapse data lake account. This will allow Synapse background processes to see files in the storage account. I will fix this in the near future.
+
 ```
 
-# Notes
+# Notes and Bugs
 The main Bicep template (main.bicep) references several linked templates (aka. modules) that are stored locally.
+
+The Azure storage account does not get assigned MSI privileges for the Synapse workspace. For now you have to assign this manually to your Synapse workspace in the pulldown. See the below screenshot of the storage account network configuration:
+
+![Storage ACL Fix](images/storageACLSBug.png?raw=true "Storage ACLS")
 
 # Parameter Specifications
 These values can be overridden on the command line.

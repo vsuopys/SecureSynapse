@@ -15,10 +15,10 @@
         "defaultDataLakeStorageFilesystemName": {
             "type": "string"
         },
-        "sqlAdministratorLogin": {
+        "sqlAdminLogin": {
             "type": "string"
         },
-        "sqlAdministratorLoginPassword": {
+        "sqlAdminPassword": {
             "type": "secureString",
             "defaultValue": ""
         },
@@ -29,6 +29,13 @@
         "allowAllConnections": {
             "type": "bool",
             "defaultValue": true
+        },
+        "subnetNameForAcls": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Subnet name to receive ACLS to connect to Synapse data lake storage"
+            }
         },
         "grantWorkspaceIdentityControlForSql": {
             "type": "string",
@@ -140,8 +147,8 @@
                     "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
                     "filesystem": "[parameters('defaultDataLakeStorageFilesystemName')]"
                 },
-                "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
-                "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+                "sqlAdminLogin": "[parameters('sqlAdminLogin')]",
+                "sqlAdminPassword": "[parameters('sqlAdminPassword')]",
                 "adlaResourceId": "[parameters('adlaResourceId')]",
                 "managedVirtualNetwork": "[parameters('managedVirtualNetwork')]",
                 "managedResourceGroupName": "[parameters('managedResourceGroupName')]",
@@ -251,13 +258,23 @@
             "condition": "[parameters('isNewStorageAccount')]",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[parameters('defaultDataLakeStorageAccountName')]",
-            "apiVersion": "2018-02-01",
+            "apiVersion": "2019-04-01",
             "location": "[parameters('storageLocation')]",
             "properties": {
                 "accessTier": "[parameters('storageAccessTier')]",
                 "supportsHttpsTrafficOnly": "[parameters('storageSupportsHttpsTrafficOnly')]",
                 "isHnsEnabled": "[parameters('storageIsHnsEnabled')]",
-                "allowBlobPublicAccess": false
+                "allowBlobPublicAccess": false,
+                "networkAcls": {
+                    // "virtualNetworkRules": [
+                    //     {
+                    //         "id": "[parameters('subnetNameForAcls')]",
+                    //         "action": "Allow",
+                    //         "state": "succeeded"
+                    //     }
+                    // ],
+                    "defaultAction": "Deny"
+                }
             },
             "sku": {
                 "name": "[parameters('storageAccountType')]"
@@ -269,7 +286,7 @@
                     "condition": "[parameters('isNewStorageAccount')]",
                     "name": "[concat('default/', parameters('defaultDataLakeStorageFilesystemName'))]",
                     "type": "blobServices/containers",
-                    "apiVersion": "2018-02-01",
+                    "apiVersion": "2019-04-01",
                     "properties": {
                         "publicAccess": "None"
                     },
@@ -295,7 +312,7 @@
                         {
                             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                             "name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/default/', parameters('defaultDataLakeStorageFilesystemName'))]",
-                            "apiVersion": "2018-02-01",
+                            "apiVersion": "2019-04-01",
                             "properties": {
                                 "publicAccess": "None"
                             }
