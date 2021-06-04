@@ -82,7 +82,7 @@ These values can be overridden on the command line.
 
 ```json
 {
-    "virtualNetworks_vnet_name": {
+    "virtualNetwork_vnet_name": {
       "defaultValue": "vnet-customer",
       "type": "String"
     },

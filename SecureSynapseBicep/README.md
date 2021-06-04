@@ -68,24 +68,24 @@ The Azure storage account does not get assigned MSI privileges for the Synapse w
 These values can be overridden on the command line.
 
 ```bicep
-param VnetName string = 'vnet-customer-bicep'
-param VnetAddressCidr string = '172.19.0.0/16'
-param DefaultSubnetCidr string = '172.19.0.0/26'
-param GatewaySubnetCidr string = '172.19.1.0/26'
-param PrivateEndpointSubnetCidr string = '172.19.2.0/26'
-param DataSubnetCidr string = '172.19.3.0/26'
+param vnetName string = 'vnet-customer-bicep'
+param vnetAddressCidr string = '172.19.0.0/16'
+param defaultSubnetCidr string = '172.19.0.0/26'
+param gatewaySubnetCidr string = '172.19.1.0/26'
+param privateEndpointSubnetCidr string = '172.19.2.0/26'
+param dataSubnetCidr string = '172.19.3.0/26'
 
-param CreateJumpVm bool = true
-param VmName string = 'vm'
+param createJumpVm bool = true
+param vmName string = 'vm'
 param vmAdminName string = 'cloudsa'
 param vmAdminPassword string
 
-param CreateSynapseWs bool = true
+param createSynapseWs bool = true
 param synapseAdminName string = 'adminuser'
 param synapseAdminPassword string
-param SynapseWsName string = 'secsynbic-ws'
-param AllowAllConnections bool = false
-param CreateNewStorageAccount bool = true
-param StorageAccountName string = 'secbicdlac'
-param StorageFilesystemName string = 'synapsefilesystem'
+param synapseWsName string = 'secsynbic-ws'
+param allowAllConnections bool = false
+param createNewStorageAccount bool = true
+param storageAccountName string = 'secbicdlac'
+param storageFilesystemName string = 'synapsefilesystem'
 ```
