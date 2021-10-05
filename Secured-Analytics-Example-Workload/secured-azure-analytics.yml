@@ -1,0 +1,26 @@
+### YamlMime:Architecture
+metadata:
+  title: Secured Azure Analytics Infrastructure
+  titleSuffix: Azure Example Scenarios
+  description: Create a baseline Azure analytics infrastructure which restricts data movement to the Azure network backbone.
+  author: vsuopys
+  ms.author: vysuopys
+  ms.date: 08/19/2021
+  ms.topic: conceptual
+  ms.service: architecture-center
+  ms.subservice: example-scenario
+azureCategories:
+  - "databases"
+  - "analytics"
+  - "security"
+products:
+  - "azure"
+  - "azure-data-lake-gen2"
+  - "azure-private-link"
+  - "azure-synapse-analytics"
+  - "azure-virtual-network"
+name: "Securing analytics infrastructure on Azure"
+summary: Create a baseline Azure analytics infrastructure which restricts data movement to the Azure network backbone.
+thumbnailUrl: /azure/architecture/browse/thumbs/SecuredSynapseInfrastructureThumbnail.png
+content: |
+  [!include[](secured-azure-analytics-content.md)]
